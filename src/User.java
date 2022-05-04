@@ -1,6 +1,7 @@
 import java.util.Date;
 
-public class User {
+//implements Comparable because I want to add Users to a TreeSet
+public class User implements Comparable{
     //members
     private static int userCounter = 0;
     private final int userID;
@@ -72,6 +73,12 @@ public class User {
 
     public void setFavoriteBeer(int favoriteBeer) {
         this.favoriteBeer = favoriteBeer;
+    }
+
+    //overrides
+    @Override //because User extends Comparable
+    public int compareTo(Object o) {
+        return 0;
     }
 
     // Methods
