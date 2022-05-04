@@ -6,7 +6,7 @@ public class Event {
     private static int eventCounter = 0;
     private final int eventID;
     private String title;
-    private Date eventDate = new Date();
+    private Date eventDate = new Date(); //TO DO param is milliseconds, need to find a better way
     //TO DO organising brewery
     //TO DO featured beer
     private Region region;

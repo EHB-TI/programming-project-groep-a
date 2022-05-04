@@ -1,6 +1,6 @@
 import java.util.Date;
 
-//implements Comparable because I want to add Users to a TreeSet
+//implements Comparable because Event class wants to add users to a visitors TreeSet
 public class User implements Comparable{
     //members
     private static int userCounter = 0;
