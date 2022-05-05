@@ -1,4 +1,4 @@
-public class beer {
+public class Beer {
     // members
     private static int beerIDCounter = 0;
     private final int beerID;
@@ -7,13 +7,13 @@ public class beer {
     // wat nog toe te voegen?
     // constructors
 
-    public beer(String name, int alcoholPercentage) {
+    public Beer(String name, int alcoholPercentage) {
         this.name = name;
         this.alcoholPercentage = alcoholPercentage;
         this.beerID = ++beerIDCounter;
     }
 
-    public beer(String name, int alcoholPercentage, int ibu, int rating) {
+    public Beer(String name, int alcoholPercentage, int ibu, int rating) {
         this.name = name;
         this.alcoholPercentage = alcoholPercentage;
         this.ibu = ibu;

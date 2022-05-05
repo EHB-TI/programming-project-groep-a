@@ -6,11 +6,11 @@ public class Event {
     private static int eventCounter = 0;
     private final int eventID;
     private String title;
-    private Date eventDate = new Date(); //TO DO param is milliseconds, need to find a better way
-    //TO DO organising brewery
-    //TO DO featured beer
+    private Date eventDate = null; //TO DO param is milliseconds, need to find a better way to input date, then convert to Date object
+    //TO DO private Brewery organisingBrewery;
+    private Beer featuredBeer;
     private Region region;
-    private TreeSet<User> visitors = new TreeSet<User>();
+    private TreeSet<User> visitors = null;
 
     //constructors
     public Event() {
@@ -45,6 +45,10 @@ public class Event {
         return visitors;
     }
 
+    public Beer getFeaturedBeer() {
+        return featuredBeer;
+    }
+
     public Region getRegion() {
         return region;
     }
@@ -58,12 +62,18 @@ public class Event {
         this.eventDate = eventDate;
     }
 
-    public void setVisitors(TreeSet<User> visitors) {
-        this.visitors = visitors;
+    //TO DO add an organising brewery to event
+
+    public void setFeaturedBeer(Beer featuredBeer) {
+        this.featuredBeer = featuredBeer;
     }
 
     public void setRegion(Region region) {
         this.region = region;
+    }
+
+    public void setVisitors(TreeSet<User> visitors) {
+        this.visitors = visitors;
     }
 
     //overrides
@@ -77,11 +87,11 @@ public class Event {
     }
 
     //methods
-    //TO DO add visitor to event
+    //STUCK add visitor to event
     public void addVisitor(User u) {
         if (this.visitors == null)
             this.visitors = new TreeSet<User>();
-        this.visitors.add(u); //TO DO add two users then it only adds one because they are the same :( How to fix this?
+        this.visitors.add(u); //add two users then it only adds one because they are the same :( How to fix this?
     }
 
     //delete visitor from event
@@ -89,14 +99,6 @@ public class Event {
         if (!(this.visitors == null))
             this.visitors.remove(u);
     }
-
-    //TO DO add featured beer to event. Maximum of one.
-
-    //TO DO delete featured beer from event
-
-    //TO DO add an organising brewery to event. Maximum of one.
-
-    //TO DO delete an organising brewery from event
 
 //ending brackets (because I get confused sometimes)
 }

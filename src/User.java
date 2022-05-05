@@ -82,7 +82,7 @@ public class User implements Comparable{
     }
 
     // Methods
-    // TO DO add beer to beer list
+    // TO DO add Beer to Beer list
     // TO DO add locations to location list
     // TO DO delete user, how to deal with user counter and user ID's?
 }
