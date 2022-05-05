@@ -89,9 +89,14 @@ public class Event {
     //methods
     //STUCK add visitor to event
     public void addVisitor(User u) {
+        //check if TreeSet exists
         if (this.visitors == null)
             this.visitors = new TreeSet<User>();
-        this.visitors.add(u); //add two users then it only adds one because they are the same :( How to fix this?
+
+        //compare u to every element in the TreeSet
+
+        //add u to TreeSet
+        this.visitors.add(u);
     }
 
     //delete visitor from event

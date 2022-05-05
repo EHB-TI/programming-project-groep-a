@@ -76,9 +76,9 @@ public class User implements Comparable{
     }
 
     //overrides
-    @Override //because User extends Comparable
+    @Override //STUCK because User implements Comparable
     public int compareTo(Object o) {
-        return 0;
+        return this.compareTo(o);
     }
 
     // Methods
