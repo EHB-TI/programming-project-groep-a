@@ -1,7 +1,7 @@
 import java.util.Date;
 
 //implements Comparable because Event class wants to add users to a visitors TreeSet
-public class User implements Comparable{
+public class User implements Comparable<User>{
     //members
     private static int userCounter = 0;
     private final int userID;
@@ -76,9 +76,12 @@ public class User implements Comparable{
     }
 
     //overrides
-    @Override //STUCK because User implements Comparable
-    public int compareTo(Object o) {
-        return this.compareTo(o);
+    @Override //because User implements Comparable
+    public int compareTo(User o) {
+        if (name == null) {
+            return o.name == null ? 0 : 1;
+        }
+        else return this.name.compareTo(o.name);
     }
 
     // Methods
