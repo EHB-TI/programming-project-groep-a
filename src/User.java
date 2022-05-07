@@ -8,7 +8,7 @@ public class User implements Comparable{
     private String name, surname;
     private int age;
     // Automatisch huidige datum als waarde toevoegen?
-    // private Date joiningDate;
+    private final Date joiningDate;
     private int favoriteBeer;
 
     // Lijst gedronken bieren
@@ -21,6 +21,7 @@ public class User implements Comparable{
         this.surname = surname;
         this.age = age;
         this.userID = userCounter; // Klopt dit?
+        joiningDate = new Date();
         userCounter++;
     }
 
@@ -30,6 +31,7 @@ public class User implements Comparable{
         this.age = age;
         this.favoriteBeer = favoriteBeer;
         this.userID = userCounter; // Klopt dit?
+        joiningDate = new Date();
         userCounter++;
     }
 
@@ -63,14 +65,13 @@ public class User implements Comparable{
         this.name = name;
     }
 
-    public void setSurname(String surname) {
+public void setSurname(String surname) {
         this.surname = surname;
     }
 
     public void setAge(int age) {
         this.age = age;
     }
-
     public void setFavoriteBeer(int favoriteBeer) {
         this.favoriteBeer = favoriteBeer;
     }
