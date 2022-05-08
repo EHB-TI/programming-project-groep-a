@@ -3,7 +3,7 @@ public class Region {
     private static int regionCounter = 0;
     private final int regionID;
     private String name, country;
-    // Nog dingen?
+    // Nog dingen? Misschien een enum met enkele regions?
 
     //constructors
     public Region(String name, String country) {

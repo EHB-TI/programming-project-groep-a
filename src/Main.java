@@ -1,16 +1,12 @@
-import java.util.TreeSet;
-
 public class Main {
     public static void main(String[] args) {
-        User u1 = new User("R", "C", 41);
-        User u2 = new User("C", "V", 44);
-        User u3 = new User("J", "V", 8);
-        Event e = new Event();
+        //some test data
+        User u1 = new User("Alice", "Mommen", 41);
+        User u2 = new User("Boris", "Cooremans", 58);
+        User u3 = new User("Charlie", "Zappa", 8);
+        Event e1 = new Event("Nationale IPA-conferentie");
+        Event e2 = new Event("De 7e Zuipkermis");
+        Event e3 = new Event("Alcoholvrij festival");
 
-        e.addVisitor(u1);
-        e.addVisitor(u2);
-        e.addVisitor(u3);
-
-        System.out.println(e.getVisitors());
     }
 }
