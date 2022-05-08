@@ -39,7 +39,7 @@ public class DatabaseSingleton {
             String url = prop.getProperty("URL");
             String username = prop.getProperty("username");
             String password = prop.getProperty("password");
-            connection = DriverManager.getConnection("jbdc:sql://dt5.ehb.be/2122SPGRA", "2122SPGRA", "eqvcnBphK");
+            connection = DriverManager.getConnection(url, username, password);
         }
             return connection;
     }

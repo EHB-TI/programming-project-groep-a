@@ -4,6 +4,7 @@ import java.util.Date;
 public class User implements Comparable<User>{
     //members
     private static int userCounter = 0;
+    // Worden IDs niet nog weggelaten als we in database met 'auto-increment' werken?
     private final int userID;
     private String name, surname;
     private int age;
