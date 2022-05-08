@@ -65,7 +65,7 @@ public class User implements Comparable<User>{
         this.name = name;
     }
 
-public void setSurname(String surname) {
+    public void setSurname(String surname) {
         this.surname = surname;
     }
 
