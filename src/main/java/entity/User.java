@@ -1,14 +1,17 @@
+package entity;
+
 import java.util.Date;
 
-//implements Comparable because Event class wants to add users to a visitors TreeSet
-public class User implements Comparable{
+//implements Comparable because entity.Event class wants to add users to a visitors TreeSet
+public class User implements Comparable<User>{
     //members
     private static int userCounter = 0;
+    // Worden IDs niet nog weggelaten als we in database met 'auto-increment' werken?
     private final int userID;
     private String name, surname;
     private int age;
     // Automatisch huidige datum als waarde toevoegen?
-    // private Date joiningDate;
+    private final Date joiningDate;
     private int favoriteBeer;
 
     // Lijst gedronken bieren
@@ -21,6 +24,7 @@ public class User implements Comparable{
         this.surname = surname;
         this.age = age;
         this.userID = userCounter; // Klopt dit?
+        joiningDate = new Date();
         userCounter++;
     }
 
@@ -30,6 +34,7 @@ public class User implements Comparable{
         this.age = age;
         this.favoriteBeer = favoriteBeer;
         this.userID = userCounter; // Klopt dit?
+        joiningDate = new Date();
         userCounter++;
     }
 
@@ -70,19 +75,21 @@ public class User implements Comparable{
     public void setAge(int age) {
         this.age = age;
     }
-
     public void setFavoriteBeer(int favoriteBeer) {
         this.favoriteBeer = favoriteBeer;
     }
 
     //overrides
-    @Override //STUCK because User implements Comparable
-    public int compareTo(Object o) {
-        return this.compareTo(o);
+    @Override //because entity.User implements Comparable
+    public int compareTo(User o) {
+        if (name == null) {
+            return o.name == null ? 0 : 1;
+        }
+        else return this.name.compareTo(o.name);
     }
 
     // Methods
-    // TO DO add Beer to Beer list
+    // TO DO add entity.Beer to entity.Beer list
     // TO DO add locations to location list
     // TO DO delete user, how to deal with user counter and user ID's?
 }

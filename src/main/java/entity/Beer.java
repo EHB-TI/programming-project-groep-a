@@ -1,3 +1,5 @@
+package entity;
+
 public class Beer {
     // members
     private static int beerIDCounter = 0;
