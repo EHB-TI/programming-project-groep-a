@@ -23,7 +23,8 @@ public class UserDAO extends BaseDAO{
     {
         try(Connection conn = getConn()){
             Statement s = conn.createStatement();
-            s.executeUpdate("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,'Joris','Imkers',30,'M','Boekhouder','Doornik','borisimkers@gmail.com',NULL)");
+            // Dit moet nog aangepast worden om ingelezen waardes van klasse 'User' te gebruiken in plaats van vooringevulde zaken
+            s.executeUpdate("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,'Timo','Koninckx',45,'M','Bankier','Antwerpen','timotimo@gmail.com',NULL)");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,8 +40,10 @@ public class UserDAO extends BaseDAO{
     }
 
     public static void main(String[] args) {
-        UserDAO udao = new UserDAO();
-        udao.saveUser();
+        // NIET UITVOEREN TENZIJ JE DUMMY WAARDES HIERBOVEN AANPAST
+        // Anders zit er een dubbele gebruiker in databank, op zich niet heel erg ma bon
+        /*UserDAO udao = new UserDAO();
+        udao.saveUser();*/
     }
 
 }
