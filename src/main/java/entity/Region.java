@@ -1,3 +1,5 @@
+package entity;
+
 public class Region {
     //members
     private static int regionCounter = 0;

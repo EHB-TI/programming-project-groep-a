@@ -1,6 +1,8 @@
+package entity;
+
 import java.util.Date;
 
-//implements Comparable because Event class wants to add users to a visitors TreeSet
+//implements Comparable because entity.Event class wants to add users to a visitors TreeSet
 public class User implements Comparable<User>{
     //members
     private static int userCounter = 0;
@@ -78,7 +80,7 @@ public class User implements Comparable<User>{
     }
 
     //overrides
-    @Override //because User implements Comparable
+    @Override //because entity.User implements Comparable
     public int compareTo(User o) {
         if (name == null) {
             return o.name == null ? 0 : 1;
@@ -87,7 +89,7 @@ public class User implements Comparable<User>{
     }
 
     // Methods
-    // TO DO add Beer to Beer list
+    // TO DO add entity.Beer to entity.Beer list
     // TO DO add locations to location list
     // TO DO delete user, how to deal with user counter and user ID's?
 }

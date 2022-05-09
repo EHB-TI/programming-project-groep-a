@@ -1,3 +1,5 @@
+package entity;
+
 import java.util.Date;
 import java.util.TreeSet;
 
@@ -80,7 +82,7 @@ public class Event {
     public String toString() {
         return "Title: " + getTitle() + "\n" +
                 "Date: " + getEventDate() + "\n";
-        //TO DO Print "Region: " + getRegion().getName() + "\n";
+        //TO DO Print "entity.Region: " + getRegion().getName() + "\n";
         //TO DO print visitors
     }
 
