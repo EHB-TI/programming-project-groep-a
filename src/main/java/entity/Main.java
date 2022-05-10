@@ -1,5 +1,7 @@
 package entity;
 
+import java.time.LocalDate;
+
 public class Main {
     public static void main(String[] args) {
         //some test data
@@ -9,5 +11,12 @@ public class Main {
         Event e1 = new Event("Nationale IPA-conferentie");
         Event e2 = new Event("De 7e Zuipkermis");
         Event e3 = new Event("Alcoholvrij festival");
+
+        LocalDate ld = LocalDate.of(2023, 6, 1);
+        e1.setEventDate(ld);
+        System.out.println(e1.getEventDate());
+        e1.setEventDate(1981,6, 1);
+        System.out.println(e1.getEventDate());
+
     }
 }

@@ -1,5 +1,6 @@
 package entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -9,7 +10,7 @@ public class Event {
     private static int eventCounter = 0;
     private final int eventID;
     private String title;
-    private Date eventDate = null; //TO DO param is milliseconds, need to find a better way to input date, then convert to Date object
+    private LocalDate eventDate = null;
     //TO DO private Brewery organisingBrewery;
     private Beer featuredBeer;
     private Region region = null;
@@ -38,7 +39,7 @@ public class Event {
         return title;
     }
 
-    public Date getEventDate() {
+    public LocalDate getEventDate() {
         return eventDate;
     }
 
@@ -59,8 +60,12 @@ public class Event {
         this.title = title;
     }
 
-    public void setEventDate(Date eventDate) {
-        this.eventDate = eventDate;
+    public void setEventDate(LocalDate eventDate) {
+      this.eventDate = eventDate;
+    }
+
+    public void setEventDate(int year, int month, int day) {
+        this.eventDate = LocalDate.of(year, month, day);
     }
 
     //TO DO add an organising brewery to event
@@ -122,5 +127,6 @@ public class Event {
         }
 
     }
+
 //ending brackets (because I get confused sometimes)
 }
