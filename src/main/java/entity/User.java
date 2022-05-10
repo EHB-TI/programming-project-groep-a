@@ -2,82 +2,73 @@ package entity;
 
 import java.util.Date;
 
-//implements Comparable because entity.Event class wants to add users to a visitors TreeSet
+//implements Comparable because entity. Event class wants to add users to a visitors TreeSet
 public class User implements Comparable<User>{
     //members
     private static int userCounter = 0;
-    // Worden IDs niet nog weggelaten als we in database met 'auto-increment' werken?
-    private final int userID;
-    private String name, surname;
+    private String name, surname, favoriteBeer, profession, residence, email;
+    // Maybe work with date of birth
     private int age;
-    // Automatisch huidige datum als waarde toevoegen?
-    private final Date joiningDate;
-    private int favoriteBeer;
 
-    // Lijst gedronken bieren
-    // Lijst bezochte plaatsen/streken
-    // Nog dingen?
+    // public enum Gender {M, V, X};
+    // ben nog niet weg met de enum, moet later nog geïmplementeerd worden
+    private String gender;
 
-    //constructors
+
+    public User(String name, String surname, int age, String gender,  String profession, String favoriteBeer, String residence, String email) {
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+        this.gender = gender;
+        this.profession = profession;
+        this.favoriteBeer = favoriteBeer;
+        this.residence = residence;
+        this.email = email;
+    }
+    // Get rid of error with test data in main, remove later
     public User(String name, String surname, int age) {
         this.name = name;
         this.surname = surname;
         this.age = age;
-        this.userID = userCounter; // Klopt dit?
-        joiningDate = new Date();
-        userCounter++;
-    }
-
-    public User(String name, String surname, int age, int favoriteBeer) {
-        this.name = name;
-        this.surname = surname;
-        this.age = age;
-        this.favoriteBeer = favoriteBeer;
-        this.userID = userCounter; // Klopt dit?
-        joiningDate = new Date();
-        userCounter++;
     }
 
     // Getters
-    public int getUserID() {
-        return userID;
-    }
+    public int getUserID() {return 0;/*via database ophalen*/}
 
-    public static int getUserCounter() {
-        return userCounter;
-    }
+    public static int getUserCounter() {return userCounter;}
 
-    public String getName() {
-        return name;
-    }
+    public String getName() {return name;}
 
-    public String getSurname() {
-        return surname;
-    }
+    public String getSurname() {return surname;}
 
-    public int getAge() {
-        return age;
-    }
+    public String getFavoriteBeer() {return favoriteBeer;}
 
-    public int getFavoriteBeer() {
-        return favoriteBeer;
-    }
+    public String getProfession() {return profession;}
+
+    public String getResidence() {return residence;}
+
+    public int getAge() {return age;}
+
+    public String getGender() {return gender;}
+
+    public String getEmail() {return email;}
 
     // Setters
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) {this.name = name;}
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+    public void setSurname(String surname) {this.surname = surname;}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-    public void setFavoriteBeer(int favoriteBeer) {
-        this.favoriteBeer = favoriteBeer;
-    }
+    public void setFavoriteBeer(String favoriteBeer) {this.favoriteBeer = favoriteBeer;}
+
+    public void setProfession(String profession) {this.profession = profession;}
+
+    public void setResidence(String residence) {this.residence = residence;}
+
+    public void setAge(int age) {this.age = age;}
+
+    public void setGender(String gender) {this.gender = gender;}
+
+    public void setEmail(String email) {this.email = email;}
 
     //overrides
     @Override //because entity.User implements Comparable
@@ -86,6 +77,20 @@ public class User implements Comparable<User>{
             return o.name == null ? 0 : 1;
         }
         else return this.name.compareTo(o.name);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", favoriteBeer='" + favoriteBeer + '\'' +
+                ", profession='" + profession + '\'' +
+                ", residence='" + residence + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                '}';
     }
 
     // Methods

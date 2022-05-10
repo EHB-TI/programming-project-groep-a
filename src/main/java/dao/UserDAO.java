@@ -1,7 +1,7 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -10,48 +10,34 @@ import entity.User;
 import javax.management.StandardEmitterMBean;
 
 public class UserDAO extends BaseDAO{
+
     public void saveUser(User u)
     {
         try(Connection conn = getConn()){
-            Statement s = conn.createStatement();
-            s.executeUpdate("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,'Joris','Imkers',30,'M','Boekhouder','Doornik','borisimkers@gmail.com',NULL)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void saveUser()
-    {
-        try(Connection conn = getConn()){
-            // Dit moet nog aangepast worden om ingelezen waardes van klasse 'User' te gebruiken in plaats van vooringevulde zaken
-            // De tijdzone van de database server staat 2 uur vroeger, wordt nu aangepast via telkens een SQL statement
-            // Dit moet ook telkens opnieuw per sessie
-            // Misschien vragen of dit voor de server permanent kan gebeuren?
-            /* Dit werkt niet...
-            Statement timeUpdate = conn.createStatement();
-            timeUpdate.executeUpdate("SET time_zone = '+02:00';");*/
-            Statement s = conn.createStatement();
-            s.executeUpdate("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,'Benjamin','Dewilde',65,'M','Historicus','Merchtem','bdw@gmail.com',NULL)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-    public void saveUsers(ArrayList<User> u)
-    {
-        try {
-            Connection conn = getConn();
+            // De timestamp is 2 uur te vroeg!
+            String insert = "INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `favobier`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,?,?,?,?,?,?,?,?,now())";
+            PreparedStatement s = conn.prepareStatement("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `favobier`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,?,?,?,?,?,?,?,?,now())");
+            s.setString(1, u.getName());
+            s.setString(2, u.getSurname());
+            s.setInt(3, u.getAge());
+            s.setString(4, u.getGender().toString());
+            s.setString(5, u.getFavoriteBeer());
+            s.setString(6, u.getProfession());
+            s.setString(7, u.getResidence());
+            s.setString(8, u.getEmail());
+            s.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        // NIET UITVOEREN TENZIJ JE DUMMY WAARDES HIERBOVEN AANPAST
+        // NIET UITVOEREN TENZIJ JE DUMMY WAARDES HIERONDER AANPAST
         // Anders zit er een dubbele gebruiker in databank, op zich niet heel erg ma bon
         UserDAO udao = new UserDAO();
-        udao.saveUser();
+        User u = new User("Alexia", "Lheureux", 16, "V", "Vertegenwoordiger", "Gueuze", "Zutendaal", "alexia@hotmail.be");
+        System.out.println(u);
+        udao.saveUser(u);
     }
 
 }
