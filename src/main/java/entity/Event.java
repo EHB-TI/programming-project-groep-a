@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 public class Event {
@@ -101,20 +102,25 @@ public class Event {
         this.visitors.add(u);
     }
 
-    //delete visitor from event
+    //STUCK - delete visitor from event
     public void deleteVisitor(User u) throws NoVisitorsException {
         //check if list is empty
         if (this.visitors == null)
             throw new NoVisitorsException();
-        else { //loop over the list and compare
-            for (User user : this.visitors) { //QUESTION - can I do this with a TreeSet? This doesn't feel right...
+        else {
+            //loop over the list with an iterator
+            Iterator<User> it = this.visitors.iterator();
+            while(it.hasNext()){
+                User user = it.next();
+                //compare
                 if (user.compareTo(u) == 0) {
                     //remove the visitor
-                    this.visitors.remove(u);
+                    it.remove();
                     System.out.println("Visitor deleted");
                 }
             }
         }
+
     }
 //ending brackets (because I get confused sometimes)
 }
