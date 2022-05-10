@@ -1,5 +1,7 @@
+package entity;
+
 public class Brewery {
-        private String Name_Brewery;
+        private String Name_Brewery; //misschien beter variabelen lowercase maken?
 
         private final int IDBrewery;
 
@@ -13,7 +15,7 @@ public class Brewery {
 
         public Brewery(String name_Brewery, int IDBrewery, String region, String Adres, String brands) {
             this.Name_Brewery = name_Brewery;
-            this.IDBrewery = IDBrewery;
+            this.IDBrewery = IDBrewery; // misschien beter automatisch laten berekenen met een increment operator en static ID-variabele?
             this.Region = region;
             this.Adres = Adres;
             this.Brands = brands;

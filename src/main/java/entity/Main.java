@@ -9,6 +9,5 @@ public class Main {
         Event e1 = new Event("Nationale IPA-conferentie");
         Event e2 = new Event("De 7e Zuipkermis");
         Event e3 = new Event("Alcoholvrij festival");
-
     }
 }
