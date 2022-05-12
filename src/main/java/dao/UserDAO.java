@@ -2,21 +2,20 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.ArrayList;
 
 import entity.User;
 
-import javax.management.StandardEmitterMBean;
 
 public class UserDAO extends BaseDAO{
 
     public void saveUser(User u)
     {
         try(Connection conn = getConn()){
-            // De timestamp is 2 uur te vroeg!
+            // De timestamp van de SQL server staat 2 uur vroeger, vandaar wordt een datumvariabele vanuit java aangemaakt.
+            long millis = System.currentTimeMillis();
+            java.sql.Date date = new java.sql.Date(millis);
             String insert = "INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `favobier`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,?,?,?,?,?,?,?,?,now())";
-            PreparedStatement s = conn.prepareStatement("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `favobier`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,?,?,?,?,?,?,?,?,now())");
+            PreparedStatement s = conn.prepareStatement("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `leeftijd`, `geslacht`, `favobier`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,?,?,?,?,?,?,?,?,?)");
             s.setString(1, u.getName());
             s.setString(2, u.getSurname());
             s.setInt(3, u.getAge());
@@ -25,6 +24,7 @@ public class UserDAO extends BaseDAO{
             s.setString(6, u.getProfession());
             s.setString(7, u.getResidence());
             s.setString(8, u.getEmail());
+            s.setDate(9, date);
             s.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,7 +35,7 @@ public class UserDAO extends BaseDAO{
         // NIET UITVOEREN TENZIJ JE DUMMY WAARDES HIERONDER AANPAST
         // Anders zit er een dubbele gebruiker in databank, op zich niet heel erg ma bon
         UserDAO udao = new UserDAO();
-        User u = new User("Alexia", "Lheureux", 16, "V", "Vertegenwoordiger", "Gueuze", "Zutendaal", "alexia@hotmail.be");
+        User u = new User("Max", "Maes", 47, "M", "Consultant", "Rochefort", "Brussel", "mmaes@hotmail.be");
         System.out.println(u);
         udao.saveUser(u);
     }
