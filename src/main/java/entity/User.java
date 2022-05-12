@@ -1,7 +1,5 @@
 package entity;
 
-import java.util.Date;
-
 //implements Comparable because entity. Event class wants to add users to a visitors TreeSet
 public class User implements Comparable<User>{
     //members
@@ -15,7 +13,7 @@ public class User implements Comparable<User>{
     private String gender;
 
 
-    public User(String name, String surname, int age, String gender,  String profession, String favoriteBeer, String residence, String email) {
+    public User(String name, String surname, int age, String gender,  String favoriteBeer, String profession,  String residence, String email) {
         this.name = name;
         this.surname = surname;
         this.age = age;
