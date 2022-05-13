@@ -1,22 +1,21 @@
 package entity;
 
+import java.util.Date;
+
 //implements Comparable because entity. Event class wants to add users to a visitors TreeSet
 public class User implements Comparable<User>{
     //members
     private static int userCounter = 0;
     private String name, surname, favoriteBeer, profession, residence, email;
     // Maybe work with date of birth
+    private Date DOB;
     private int age;
-
-    // public enum Gender {M, V, X};
-    // ben nog niet weg met de enum, moet later nog geïmplementeerd worden
     private String gender;
 
-
-    public User(String name, String surname, int age, String gender,  String favoriteBeer, String profession,  String residence, String email) {
+    public User(String name, String surname, Date DOB, String gender,  String favoriteBeer, String profession,  String residence, String email) {
         this.name = name;
         this.surname = surname;
-        this.age = age;
+        this.DOB = DOB;
         this.gender = gender;
         this.profession = profession;
         this.favoriteBeer = favoriteBeer;
@@ -45,7 +44,7 @@ public class User implements Comparable<User>{
 
     public String getResidence() {return residence;}
 
-    public int getAge() {return age;}
+    public Date getDOB() {return DOB;}
 
     public String getGender() {return gender;}
 
@@ -62,7 +61,7 @@ public class User implements Comparable<User>{
 
     public void setResidence(String residence) {this.residence = residence;}
 
-    public void setAge(int age) {this.age = age;}
+    public void setDOB(Date DOB) {this.DOB = DOB;}
 
     public void setGender(String gender) {this.gender = gender;}
 
@@ -86,7 +85,7 @@ public class User implements Comparable<User>{
                 ", profession='" + profession + '\'' +
                 ", residence='" + residence + '\'' +
                 ", email='" + email + '\'' +
-                ", age=" + age +
+                ", DOB=" + DOB +
                 ", gender='" + gender + '\'' +
                 '}';
     }
