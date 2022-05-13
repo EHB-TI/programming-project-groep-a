@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Screen extends JFrame {
+public class AddUserScreen extends JFrame {
     private JFrame jframe;
     private JLabel nameLabel;
     private JTextField nameField;
@@ -35,7 +35,7 @@ public class Screen extends JFrame {
     private JTextField emailField;
     private JButton saveButton;
 
-    public Screen() {
+    public AddUserScreen() {
         jframe = new JFrame("MyBrews");
         jframe.setSize(500,800);
         // Name
@@ -131,6 +131,6 @@ public class Screen extends JFrame {
     }
 
     public static void main(String[] args) {
-        Screen s = new Screen();
+        AddUserScreen s = new AddUserScreen();
     }
 }
