@@ -41,6 +41,6 @@ public class Region {
     }
 
     // Methods
-    // TO DO delete regions, how to deal with region counter and region ID's?
+    // TO DO delete regions, how to deal with region counter and region ID's? >> Ik zou de counters gewoon laten doortellen, de ID's worden gedelete samen met het object denk ik
 
 }
