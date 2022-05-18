@@ -11,9 +11,9 @@ public class Event {
     private final int eventID;
     private String title;
     private LocalDate eventDate = null;
-    //TO DO private Brewery organisingBrewery;
+    private Brewery organisingBrewery;
     private Beer featuredBeer;
-    private Region region = null;
+    private Region region;
     private TreeSet<User> visitors = null;
 
     //constructors
@@ -43,6 +43,10 @@ public class Event {
         return eventDate;
     }
 
+    public Brewery getOrganisingBrewery() {
+        return organisingBrewery;
+    }
+
     public TreeSet<User> getVisitors() {
         return visitors;
     }
@@ -68,7 +72,9 @@ public class Event {
         this.eventDate = LocalDate.of(year, month, day);
     }
 
-    //TO DO add an organising brewery to event
+    public void setOrganisingBrewery(Brewery organisingBrewery) {
+        this.organisingBrewery = organisingBrewery;
+    }
 
     public void setFeaturedBeer(Beer featuredBeer) {
         this.featuredBeer = featuredBeer;
@@ -87,8 +93,8 @@ public class Event {
     @Override
     public String toString() {
         return "Title: " + getTitle() + "\n" +
-                "Date: " + getEventDate() + "\n";
-        //TO DO Print "entity.Region: " + getRegion().getName() + "\n";
+                "Date: " + getEventDate() + "\n" +
+                "Region: " + getRegion() + "\n";
         //TO DO print visitors
     }
 
