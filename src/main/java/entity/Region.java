@@ -1,9 +1,9 @@
 package entity;
 
-public class Region {
+public class Region { //enkel enum?
     //members
     private static int regionCounter = 0;
-    private final int regionID;
+    private final int regionID; //mag weg
     private String name, country;
     // Nog dingen? Misschien een enum met enkele regions?
 
@@ -40,7 +40,7 @@ public class Region {
         this.country = country;
     }
 
-    // Methods
+    // Methods //niet nodig als het enkel enum is
     // TO DO delete regions, how to deal with region counter and region ID's? >> Ik zou de counters gewoon laten doortellen, de ID's worden gedelete samen met het object denk ik
 
 }

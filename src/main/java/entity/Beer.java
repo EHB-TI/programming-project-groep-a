@@ -3,19 +3,20 @@ package entity;
 public class Beer {
     // members
     private static int beerIDCounter = 0;
-    private final int beerID;
+    private final int beerID; //mag weg, wordt op db gegenereerd (autoincrement)
     private String name;
-    private  int alcoholPercentage,ibu, rating;
+    private  int ibu, rating; //POLAR: rating ook double of enum?
+    private double alcoholPercentage;
     // wat nog toe te voegen?
     // constructors
 
-    public Beer(String name, int alcoholPercentage) {
+    public Beer(String name, double alcoholPercentage) {
         this.name = name;
         this.alcoholPercentage = alcoholPercentage;
         this.beerID = ++beerIDCounter;
     }
 
-    public Beer(String name, int alcoholPercentage, int ibu, int rating) {
+    public Beer(String name, double alcoholPercentage, int ibu, int rating) {
         this.name = name;
         this.alcoholPercentage = alcoholPercentage;
         this.ibu = ibu;
@@ -29,7 +30,7 @@ public class Beer {
         return name;
     }
 
-    public int getAlcoholPercentage() {
+    public double getAlcoholPercentage() {
         return alcoholPercentage;
     }
 
@@ -45,7 +46,7 @@ public class Beer {
         this.name = name;
     }
 
-    public void setAlcoholPercentage(int alcoholPercentage) {
+    public void setAlcoholPercentage(double alcoholPercentage) {
         this.alcoholPercentage = alcoholPercentage;
     }
 

@@ -3,7 +3,8 @@ package dao;
 import entity.Event;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class EventDAO extends BaseDAO {
 
@@ -16,23 +17,21 @@ public class EventDAO extends BaseDAO {
     public void saveEvent()
     {
         try(Connection conn = getConn()){
-            //TO DO: prepared statement
-            //PreparedStatement ps = conn.prepareStatement("INSERT INTO events ()");
-            //Statement stmt here?
-            //ResultSet here?
+            //TO DO
+            Statement stmt = null;
+            ResultSet rs = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     //TO DO findEvent
-    public void findEvent(String s) //s can be the title (or an int eventID cast to String?)
+    public void findEvent(String s) //s can be the title
     {
         try(Connection conn = getConn()){
-            //prepared statement
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM events WHERE title = ?");
-            //Statement stmt here?
-            //ResultSet here?
+            //TO DO
+            Statement stmt = null;
+            ResultSet rs = null;
         } catch (Exception e) {
             e.printStackTrace();
         }

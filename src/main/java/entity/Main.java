@@ -18,5 +18,11 @@ public class Main {
         e1.setEventDate(1981,6, 1);
         System.out.println(e1.getEventDate());
 
+        try {
+            e1.deleteVisitor(u1);
+        } catch (NoVisitorsException e) {
+            e.printStackTrace();
+        }
+
     }
 }

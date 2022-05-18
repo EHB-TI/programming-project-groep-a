@@ -7,13 +7,13 @@ import java.util.TreeSet;
 
 public class Event {
     //members
-    private static int eventCounter = 0;
-    private final int eventID;
+    private static int eventCounter = 0; //mag weg, wordt op db gegenereerd (autoincrement)
+    private final int eventID; //mag weg, wordt op db gegenereerd (autoincrement)
     private String title;
     private LocalDate eventDate = null;
-    //TO DO private Brewery organisingBrewery;
+    private Brewery organisingBrewery;
     private Beer featuredBeer;
-    private Region region = null;
+    private Region region;
     private TreeSet<User> visitors = null;
 
     //constructors
@@ -43,6 +43,10 @@ public class Event {
         return eventDate;
     }
 
+    public Brewery getOrganisingBrewery() {
+        return organisingBrewery;
+    }
+
     public TreeSet<User> getVisitors() {
         return visitors;
     }
@@ -68,7 +72,9 @@ public class Event {
         this.eventDate = LocalDate.of(year, month, day);
     }
 
-    //TO DO add an organising brewery to event
+    public void setOrganisingBrewery(Brewery organisingBrewery) {
+        this.organisingBrewery = organisingBrewery;
+    }
 
     public void setFeaturedBeer(Beer featuredBeer) {
         this.featuredBeer = featuredBeer;
@@ -87,13 +93,14 @@ public class Event {
     @Override
     public String toString() {
         return "Title: " + getTitle() + "\n" +
-                "Date: " + getEventDate() + "\n";
-        //TO DO Print "entity.Region: " + getRegion().getName() + "\n";
+                "Date: " + getEventDate() + "\n" +
+                "Region: " + getRegion() + "\n";
         //TO DO print visitors
     }
 
     //methods
     //add visitor to event
+    //TO DO rechtstreeks op EventDAO werken
     public void addVisitor(User u) throws UserAlreadyAddedException {
         //check if TreeSet exists
         if (this.visitors == null)
@@ -107,7 +114,8 @@ public class Event {
         this.visitors.add(u);
     }
 
-    //STUCK? - delete visitor from event
+    //TO DO - STUCK? only deletes one? - delete visitor from event
+    //TO DO rechtstreeks op EventDAO werken
     public void deleteVisitor(User u) throws NoVisitorsException {
         //check if list is empty
         if (this.visitors == null)
