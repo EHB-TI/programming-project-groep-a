@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.ArrayList;
+
 public class Brewery {
         private String Name_Brewery; //misschien beter variabelen lowercase maken?
 
@@ -10,6 +12,8 @@ public class Brewery {
         private String Adres;
 
         private String Brands;
+
+        //optie? private ArrayList<Beer> beerlist = new ArrayList<Beer>();
 
         //construct
 
