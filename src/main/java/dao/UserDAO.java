@@ -3,9 +3,9 @@ package dao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import entity.User;
-
 
 public class UserDAO extends BaseDAO{
 
@@ -31,25 +31,36 @@ public class UserDAO extends BaseDAO{
         }
     }
 
-    public void findUser(String s)
+    // Maybe return resultset and then show them in a JFrame
+    // Here a User object is created because this function cannot reach the JTextArea
+    public User findUser(String s)
     {
+        User u = null;
+        String name, surname, gender, beer, profession, residence, email;
+        Date DOB, joiningDate;
+
         try(Connection conn = getConn()){
-            PreparedStatement ps = conn.prepareStatement("SELECT `voornaam`, `achternaam`, `favobier`, `beroep`, `email`, `toetreding` WHERE achternaam = ? OR voornaam = ?");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `gebruikers` WHERE achternaam = ? OR voornaam = ?");
+            // Searching by name is not case-sensitive!
             ps.setString(1, s);
             ps.setString(2, s);
-            s.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                name = rs.getString("voornaam");
+                surname = rs.getString("achternaam");
+                DOB = rs.getDate("geboortedatum");
+                gender = rs.getString("geslacht");
+                beer = rs.getString("favobier");
+                profession = rs.getString("beroep");
+                residence = rs.getString("woonplaats");
+                email = rs.getString("email");
+                joiningDate = rs.getDate("toetreding");
+                u = new User(name, surname, DOB, gender, beer, profession, residence, email, joiningDate);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        // NIET UITVOEREN TENZIJ JE DUMMY WAARDES HIERONDER AANPAST
-        // Anders zit er een dubbele gebruiker in databank, op zich niet heel erg ma bon
-        /*UserDAO udao = new UserDAO();
-        User u = new User("Max", "Maes", "1991-05-20", "M", "Consultant", "Rochefort", "Brussel", "mmaes@hotmail.be");
-        System.out.println(u);
-        udao.saveUser(u);*/
+        return u;
     }
 
 }
