@@ -33,7 +33,6 @@ public class UserDAO extends BaseDAO{
 
     // Maybe return resultset and then show them in a JFrame
     // Here a User object is created because this function cannot reach the JTextArea
-    // Fix with JTextArea setter
     public User findUser(String s)
     {
         User u = null;
