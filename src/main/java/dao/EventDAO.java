@@ -3,8 +3,8 @@ package dao;
 import entity.Event;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class EventDAO extends BaseDAO {
 
@@ -13,28 +13,35 @@ public class EventDAO extends BaseDAO {
         return super.getConn();
     }
 
-    //TO DO saveEvent
-    public void saveEvent()
+    //save event
+    //HOW TO SAVE LocalDate, Brewery, Beer, Region?
+    public void saveEvent(Event event)
     {
         try(Connection conn = getConn()){
-            //TO DO
-            Statement stmt = null;
-            ResultSet rs = null;
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO evenementen (titel) VALUES (?)");
+            stmt.setString(1, event.getTitle());
+            stmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //TO DO findEvent
-    public void findEvent(String s) //s can be the title
+    //findEvent on title
+    public void findEventByTitle(String searchTerm)
     {
+        //wildcard % doesn't work?
         try(Connection conn = getConn()){
-            //TO DO
-            Statement stmt = null;
-            ResultSet rs = null;
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM evenementen WHERE titel LIKE ?");
+            stmt.setString(1, searchTerm);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                System.out.println(rs.getString("titel"));
+            }
+            if (!rs.next()){
+                System.out.println("Done.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

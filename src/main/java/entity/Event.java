@@ -7,8 +7,6 @@ import java.util.TreeSet;
 
 public class Event {
     //members
-    private static int eventCounter = 0; //mag weg, wordt op db gegenereerd (autoincrement)
-    private final int eventID; //mag weg, wordt op db gegenereerd (autoincrement)
     private String title;
     private LocalDate eventDate = null;
     private Brewery organisingBrewery;
@@ -18,23 +16,13 @@ public class Event {
 
     //constructors
     public Event() {
-        this.eventID = ++eventCounter;
     }
 
     public Event(String title) {
-        this.eventID = ++eventCounter;
         this.title = title;
     }
 
     //getters
-    public static int getEventCounter() {
-        return eventCounter;
-    }
-
-    public int getEventID() {
-        return eventID;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -100,9 +88,9 @@ public class Event {
 
     //methods
     //add visitor to event
-    //TO DO rechtstreeks op EventDAO werken
+    //TO DO: put method on EventDAO
     public void addVisitor(User u) throws UserAlreadyAddedException {
-        //check if TreeSet exists
+        // check if TreeSet exists
         if (this.visitors == null)
             this.visitors = new TreeSet<User>();
         //compare u to every element in the TreeSet
@@ -115,7 +103,7 @@ public class Event {
     }
 
     //TO DO - STUCK? only deletes one? - delete visitor from event
-    //TO DO rechtstreeks op EventDAO werken
+    //HOW TO work directly on EventDAO object?
     public void deleteVisitor(User u) throws NoVisitorsException {
         //check if list is empty
         if (this.visitors == null)
