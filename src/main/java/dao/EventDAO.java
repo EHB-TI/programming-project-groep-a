@@ -2,9 +2,7 @@ package dao;
 
 import entity.Event;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class EventDAO extends BaseDAO {
 
@@ -13,8 +11,7 @@ public class EventDAO extends BaseDAO {
         return super.getConn();
     }
 
-    //save event
-    //HOW TO SAVE LocalDate, Brewery, Beer, Region?
+    //save event enkel met titel
     public void saveEvent(Event event)
     {
         try(Connection conn = getConn()){
@@ -26,7 +23,26 @@ public class EventDAO extends BaseDAO {
         }
     }
 
-    //findEvent on title
+    //save event met meer velden, om te oefenen
+    public void saveEventMoreFields(Event event){
+        Connection conn = null;
+        try {
+            conn = getConn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO evenementen (titel, datum, organisator, bier) VALUES (?,?,?,?)")) {
+            ps.setString(1, event.getTitle());
+            ps.setDate(2, Date.valueOf(event.getEventDate()));
+            ps.setString(3, String.valueOf(event.getOrganisingBrewery()));
+            ps.setString(4, String.valueOf(event.getFeaturedBeer()));
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //findEvent by title
     public void findEventByTitle(String searchTerm)
     {
         //wildcard % doesn't work?
@@ -41,6 +57,26 @@ public class EventDAO extends BaseDAO {
                 System.out.println("Done.");
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //findEvent by date, om te oefenen
+    public void findEventByDate(Date date){
+        Connection conn = null;
+        try {
+            conn = getConn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM evenementen WHERE datum = ?")) {
+            ps.setDate(1, date);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                System.out.println(rs.getString("titel"));
+                System.out.println(rs.getDate("datum"));
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

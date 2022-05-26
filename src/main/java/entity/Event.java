@@ -1,6 +1,7 @@
 package entity;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -77,13 +78,11 @@ public class Event {
     }
 
     //overrides
-    //TO DO print the event's details plus a list of visitors
     @Override
     public String toString() {
-        return "Title: " + getTitle() + "\n" +
-                "Date: " + getEventDate() + "\n" +
-                "Region: " + getRegion() + "\n";
-        //TO DO print visitors
+        return "Title: " + this.getTitle() + "\n" +
+                "Date: " + this.getEventDate() + "\n" +
+                "Region: " + this.getRegion() + "\n";
     }
 
     //methods
@@ -124,5 +123,5 @@ public class Event {
 
     }
 
-//ending brackets (because I get confused sometimes)
+
 }
