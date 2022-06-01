@@ -20,21 +20,27 @@ public class FindUserScreen extends JFrame {
 
     public FindUserScreen() {
         jframe = new JFrame("MyBrews");
-        jframe.setSize(500,550);
+        jframe.setSize(500,650);
         // Form title
-        findTitle = new JLabel("Add someone to the MyBrews database");
+        findTitle = new JLabel("Find someone in the MyBrews database");
         findTitle.setFont(new Font("Tahoma", Font.BOLD, 18));
         // Search input label and field
         inputLabel = new JLabel("Search by (sur)name");
         inputField = new JTextField(30);
         // Search button
-        searchButton = new JButton("Search!");
+        searchButton = new JButton("Search user!");
         // Prepare table to show search results
         String[] header = {"Name", "Surname", "DOB", "Gender", "Favorite beer", "Profession", "Residence", "e-mail", "Date joined"};
         DefaultTableModel model = new DefaultTableModel(header, 0);
         displayUserTable = new JTable(model);
+        displayUserTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
         // Table will go in scroll pane, if you click search again, another row is added to the table
-        tablePane = new JScrollPane(displayUserTable); // FIX WIDTH
+        tablePane = new JScrollPane(displayUserTable);
+
+        // FIX WIDTH
+        tablePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+
 
         SpringLayout layout = new SpringLayout();
         jframe.setLayout(layout);
