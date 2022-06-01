@@ -36,6 +36,15 @@ public class BreweryDAO extends BaseDAO {
         }
     }
 
-
+    //deleteBrewery by name
+    public void deleteEvent(String name){
+        try(Connection conn = getConn()){
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM brouwerijen WHERE brouwerijnaam = ?");
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -8,7 +8,10 @@ window.onload = () => {
     let submitButton = document.getElementById("submitButton");
 
     submitButton.addEventListener('click', function () {
-        //TO DO send email and message to database?
+        //TO DO get form fields
+        //TO DO connect to database
+        //TO DO save form to database
+        //https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_forms_through_JavaScript
     });
 
 

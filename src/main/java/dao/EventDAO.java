@@ -75,4 +75,15 @@ public class EventDAO extends BaseDAO {
             e.printStackTrace();
         }
     }
+
+    //deleteEvent by name
+    public void deleteEvent(String title){
+        try(Connection conn = getConn()){
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM evenementen WHERE titel = ?");
+            stmt.setString(1, title);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
