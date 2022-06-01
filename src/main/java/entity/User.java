@@ -63,6 +63,8 @@ public class User implements Comparable<User>{
 
     public String getEmail() {return email;}
 
+    public Date getJoiningDate() {return joiningDate;}
+
     // Setters
     public void setName(String name) {this.name = name;}
 

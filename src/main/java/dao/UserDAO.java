@@ -60,7 +60,7 @@ public class UserDAO extends BaseDAO{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return u;
+        return u; // WHAT IF USER NOT FOUND
     }
 
 }
