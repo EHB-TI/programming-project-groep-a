@@ -6,11 +6,6 @@ import java.sql.*;
 
 public class EventDAO extends BaseDAO {
 
-    @Override //Establish a connection
-    public Connection getConn() throws Exception {
-        return super.getConn();
-    }
-
     //save event enkel met titel
     public void saveEvent(Event event)
     {

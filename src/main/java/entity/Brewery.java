@@ -1,68 +1,52 @@
 package entity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Brewery {
-        private String Name_Brewery; //misschien beter variabelen lowercase maken?
+    //members
+    private String nameBrewery;
+    private Region regionBrewery;
+    private String addressBrewery;
+    private List<Beer> brandsBrewery = null;
 
-        private final int IDBrewery;
+    //constructors
 
-        private String Region;
+    //getters and setters
+    public String getNameBrewery() {
+        return nameBrewery;
+    }
 
-        private String Adres;
+    public void setNameBrewery(String nameBrewery) {
+        this.nameBrewery = nameBrewery;
+    }
 
-        private String Brands;
+    public Region getRegionBrewery() {
+        return regionBrewery;
+    }
 
-        //optie? private ArrayList<Beer> beerlist = new ArrayList<Beer>();
+    public void setRegionBrewery(Region regionBrewery) {
+        this.regionBrewery = regionBrewery;
+    }
 
-        //construct
+    public String getAddressBrewery() {
+        return addressBrewery;
+    }
 
-        public Brewery(String name_Brewery, int IDBrewery, String region, String Adres, String brands) {
-            this.Name_Brewery = name_Brewery;
-            this.IDBrewery = IDBrewery; // misschien beter automatisch laten berekenen met een increment operator en static ID-variabele?
-            this.Region = region;
-            this.Adres = Adres;
-            this.Brands = brands;
-        }
-        //getters
+    public void setAddressBrewery(String addressBrewery) {
+        this.addressBrewery = addressBrewery;
+    }
 
-        public String getName_Brewery() {
-            return Name_Brewery;
-        }
+    public List<Beer> getBrandsBrewery() {
+        return brandsBrewery;
+    }
 
-        public int getIDBrewery() {
-            return IDBrewery;
-        }
+    public void setBrandsBrewery(List<Beer> brandsBrewery) {
+        this.brandsBrewery = brandsBrewery;
+    }
 
-        public String getRegion() {
-            return Region;
-        }
+    //overrides
 
-        public String getAdres() {
-            return Adres;
-        }
-
-        public String getBrands() {
-            return Brands;
-        }
-
-        //setters
-
-
-        public void setName_Brewery(String name_Brewery) {
-            Name_Brewery = name_Brewery;
-        }
-
-        public void setRegion(String region) {
-            Region = region;
-        }
-
-        public void setAdres(String adres) {
-            Adres = adres;
-        }
-
-        public void setBrands(String brands) {
-            Brands = brands;
-        }
+    //methods
 }
+
 
