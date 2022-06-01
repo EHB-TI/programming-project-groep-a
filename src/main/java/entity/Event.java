@@ -87,7 +87,6 @@ public class Event {
 
     //methods
     //add visitor to event
-    //TO DO: put method on EventDAO
     public void addVisitor(User u) throws UserAlreadyAddedException {
         // check if TreeSet exists
         if (this.visitors == null)
@@ -102,7 +101,6 @@ public class Event {
     }
 
     //TO DO - STUCK? only deletes one? - delete visitor from event
-    //HOW TO work directly on EventDAO object?
     public void deleteVisitor(User u) throws NoVisitorsException {
         //check if list is empty
         if (this.visitors == null)
