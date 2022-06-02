@@ -12,7 +12,7 @@ public class User implements Comparable<User>{
     private int age;
     private String gender;
 
-    public User(String name, String surname, Date DOB, String gender,  String favoriteBeer, String profession,  String residence, String email) {
+    public User(String name, String surname, Date DOB, String gender, String favoriteBeer, String profession,  String residence, String email) {
         this.name = name;
         this.surname = surname;
         this.DOB = DOB;

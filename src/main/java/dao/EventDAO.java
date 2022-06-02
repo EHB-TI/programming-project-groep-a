@@ -1,6 +1,7 @@
 package dao;
 
 import entity.Event;
+import entity.User;
 
 import java.sql.*;
 
@@ -18,7 +19,7 @@ public class EventDAO extends BaseDAO {
         }
     }
 
-    //save event met meer velden, om te oefenen
+    //save event met meer velden
     public void saveEventMoreFields(Event event){
         Connection conn = null;
         try {
@@ -26,14 +27,23 @@ public class EventDAO extends BaseDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO evenementen (titel, datum, organisator, bier) VALUES (?,?,?,?)")) {
-            ps.setString(1, event.getTitle());
-            ps.setDate(2, Date.valueOf(event.getEventDate()));
-            ps.setString(3, String.valueOf(event.getOrganisingBrewery()));
-            ps.setString(4, String.valueOf(event.getFeaturedBeer()));
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO evenementen (evenementid, titel, datum, organisator, bier) VALUES (NULL, ?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(2, event.getTitle());
+            ps.setDate(3, Date.valueOf(event.getEventDate()));
+            ps.setString(4, String.valueOf(event.getOrganisingBrewery()));
+            ps.setString(5, String.valueOf(event.getFeaturedBeer()));
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        //?
+        try (PreparedStatement ps2 = conn.prepareStatement("INSERT INTO aanwezigen (evenementid, gebruikersid) VALUES (NULL, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            for (User v : event.getVisitors()) {
+                ps2.setInt(2, v.getUserID());
+                ps2.executeUpdate();
+            }
+            } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
