@@ -165,7 +165,7 @@ public class AddUserScreen extends JFrame {
                 try {
                     DOB = formatter.parse(DOBString);
                 } catch (ParseException ex) {
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(jframe, "Please fill out a correctly formatted birthday!", "Date error", JOptionPane.WARNING_MESSAGE);
                 }
                 final java.sql.Date sqlDOB = new java.sql.Date(DOB.getTime());
                 final String gender;
@@ -177,13 +177,19 @@ public class AddUserScreen extends JFrame {
                 final String profession = professionField.getText();
                 final String residence = residenceField.getText();
                 final String email = emailField.getText();
-
-                UserDAO udao = new UserDAO();
-                User u = new User(name, surname, sqlDOB, gender, beer, profession, residence, email);
-                udao.saveUser(u);
-                System.out.println("added");
+                if (name != null && surname != null && DOB != null && gender != null && beer != null && profession != null && residence != null && email != null) {
+                    // Put fields in user to pass to saveUser function
+                    User u = new User(name, surname, sqlDOB, gender, beer, profession, residence, email);
+                    UserDAO udao = new UserDAO();
+                    // Parameter jframe to show dialogs from saveUser function
+                    udao.saveUser(u, jframe);
+                }
+                else {
+                    JOptionPane.showMessageDialog(jframe, "Please fill out all fields!", "Empty form", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
+        jframe.setLocationRelativeTo(null); // Center of screen
         jframe.setVisible(true);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
