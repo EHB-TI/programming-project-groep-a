@@ -1,7 +1,9 @@
 package dao;
 
 import entity.User;
+import gui.CheckUserScreen;
 
+import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -47,16 +49,16 @@ public class UserDAO extends BaseDAO{
         }
     }
 
-    public ArrayList<User> findUser(String s) {
+    public ArrayList<User> findUser(String n, String sn, String em) {
         ArrayList<User> usersFound = new ArrayList<>();
         String name, surname, gender, beer, profession, residence, email;
         Date DOB, joiningDate;
-
         try (Connection conn = getConn()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `gebruikers` WHERE achternaam = ? OR voornaam = ?");
-            // Searching by name is not case-sensitive!
-            ps.setString(1, s);
-            ps.setString(2, s);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM gebruikers WHERE voornaam = ? OR achternaam = ? OR email = ?");
+            // Searching is not case-sensitive!
+            ps.setString(1, n);
+            ps.setString(2, sn);
+            ps.setString(3, em);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 name = rs.getString("voornaam");
@@ -81,37 +83,75 @@ public class UserDAO extends BaseDAO{
     // That is where the last user searched appears
     public void deleteUser(JTable jtable, JFrame jframe)
     {
-        try(Connection conn = getConn()){
-            int lastRow = jtable.getModel().getRowCount()-1;
-            if (lastRow < 0) {
-                JOptionPane.showMessageDialog(jframe, "You must first search for a user before deleting.", "Delete error", JOptionPane.WARNING_MESSAGE);
-            }
+        int lastRow = jtable.getModel().getRowCount()-1;
+        if (lastRow < 0) {
+            JOptionPane.showMessageDialog(jframe, "You must first search for a user before deleting.", "Delete error", JOptionPane.WARNING_MESSAGE);
+        }
+        else {
             // Get name, surname and email of user to delete from jtable
             // We decided that these are what makes a user unique (see saveUser function above)
-            // Returns object
-            Object name = jtable.getModel().getValueAt(lastRow, 0);
-            Object surname = jtable.getModel().getValueAt(lastRow, 1);
-            Object email = jtable.getModel().getValueAt(lastRow, 7);
+            String name = (String)jtable.getModel().getValueAt(lastRow, 0); // Returns object, cast to String
+            String surname = (String)jtable.getModel().getValueAt(lastRow, 1);
+            String email = (String)jtable.getModel().getValueAt(lastRow, 7);
 
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM `gebruikers` WHERE voornaam = ? AND achternaam = ? AND email = ?");
-            ps.setString(1, (String)name); // Cast to string
-            ps.setString(2, (String)surname);
-            ps.setString(3, (String)email);
-            // Returns int (amount of rows deleted)
-            int checkIfDeleted = ps.executeUpdate();
-            System.out.println(checkIfDeleted);
-            if(checkIfDeleted != 0) {
-                JOptionPane.showMessageDialog(jframe, "The user has been deleted!.", "User deleted", JOptionPane.WARNING_MESSAGE);
+            try (Connection conn = getConn()) {
+                PreparedStatement ps = conn.prepareStatement("DELETE FROM gebruikers WHERE voornaam = ? AND achternaam = ? AND email = ?");
+                ps.setString(1, name);
+                ps.setString(2, surname);
+                ps.setString(3, email);
+                // Returns int amount of rows deleted
+                int checkIfDeleted = ps.executeUpdate();
+                if (checkIfDeleted != 0) {
+                    JOptionPane.showMessageDialog(jframe, "The user has been deleted!.", "User deleted", JOptionPane.WARNING_MESSAGE);
+                }
+                // Delete error
+                else {
+                    JOptionPane.showMessageDialog(jframe, "The user has already been deleted or doesn't exist. Try searching for another user to delete first.", "User delete failed", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            // Delete error
-            else {
-                JOptionPane.showMessageDialog(jframe, "The user has already been deleted or doesn't exist. Try searching for another user to delete first.", "User delete failed", JOptionPane.WARNING_MESSAGE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
+    public void selectUser(JTable jtable, JFrame jframe)
+    {
+        String beerName, variant, percentage, color;
+        int lastRow = jtable.getModel().getRowCount()-1;
+        if (lastRow < 0) {
+            JOptionPane.showMessageDialog(jframe, "You must first search for a user before deleting.", "Delete error", JOptionPane.WARNING_MESSAGE);
+        }
+        else {
+            String name = (String)jtable.getModel().getValueAt(lastRow, 0); // Returns object, cast to String
+            String surname = (String)jtable.getModel().getValueAt(lastRow, 1);
+            String email = (String)jtable.getModel().getValueAt(lastRow, 7);
+            try (Connection conn = getConn()) {
+                PreparedStatement ps = conn.prepareStatement("SELECT b.* FROM gebruikers g JOIN gedronkenbieren gb ON g.gebruikersid = gb.gebruikersid JOIN bieren b ON b.bierid = gb.bierid WHERE voornaam = ? AND achternaam = ? AND email = ? ORDER BY biernaam, variant");
+                ps.setString(1, name);
+                ps.setString(2, surname);
+                ps.setString(3, email);
+
+                ResultSet rs = ps.executeQuery();
+                CheckUserScreen cus = new CheckUserScreen(name);
+                // Beers already ordered by name and then variant in SQL query
+                while (rs.next()) {
+                    beerName = rs.getString("biernaam");
+                    variant = rs.getString("variant");
+                    percentage = rs.getString("percentage");
+                    color = rs.getString("kleur");
+                    String[] tableData = {beerName, variant, percentage, color};
+                    cus.addToTable(tableData);
+                    }
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+
+
+        }
+    }
 
 
 }

@@ -2,57 +2,32 @@ package entity;
 
 public class Beer {
     // members
-    private static int beerIDCounter = 0;
-    private String name;
-    private  int ibu, rating; //POLAR: rating ook double of enum?
+    private String name, variant, color;
     private double alcoholPercentage;
-    // wat nog toe te voegen?
-    // constructors
 
-    public Beer(String name, double alcoholPercentage) {
+    public Beer(String name, String variant, String color, double alcoholPercentage) {
         this.name = name;
+        this.variant = variant;
+        this.color = color;
         this.alcoholPercentage = alcoholPercentage;
     }
 
-    public Beer(String name, double alcoholPercentage, int ibu, int rating) {
-        this.name = name;
-        this.alcoholPercentage = alcoholPercentage;
-        this.ibu = ibu;
-        this.rating = rating;
-    }
     // linken nog aan brouwerij?
-    // getters
 
-    public String getName() {
-        return name;
-    }
+    // getters and setters
+    public String getName() {return name;}
 
-    public double getAlcoholPercentage() {
-        return alcoholPercentage;
-    }
+    public void setName(String name) {this.name = name;}
 
-    public int getIbu() {
-        return ibu;
-    }
+    public String getVariant() {return variant;}
 
-    public int getRating() {
-        return rating;
-    }
-    // setters
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setVariant(String variant) {this.variant = variant;}
 
-    public void setAlcoholPercentage(double alcoholPercentage) {
-        this.alcoholPercentage = alcoholPercentage;
-    }
+    public String getColor() {return color;}
 
-    public void setIbu(int ibu) {
-        this.ibu = ibu;
-    }
+    public void setColor(String color) {this.color = color;}
 
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-    // methods
+    public double getAlcoholPercentage() {return alcoholPercentage;}
+
+    public void setAlcoholPercentage(double alcoholPercentage) {this.alcoholPercentage = alcoholPercentage;}
 }

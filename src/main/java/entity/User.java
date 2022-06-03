@@ -5,11 +5,9 @@ import java.util.Date;
 //implements Comparable because entity. Event class wants to add users to a visitors TreeSet
 public class User implements Comparable<User>{
     //members
-    private static int userCounter = 0;
     private String name, surname, favoriteBeer, profession, residence, email;
     // Maybe work with date of birth
     private Date DOB, joiningDate;
-    private int age;
     private String gender;
 
     public User(String name, String surname, Date DOB, String gender, String favoriteBeer, String profession,  String residence, String email) {
@@ -35,17 +33,9 @@ public class User implements Comparable<User>{
         this.email = email;
         this.joiningDate = joiningDate;
     }
-    // Get rid of error with test data in main, remove later
-    public User(String name, String surname, int age) {
-        this.name = name;
-        this.surname = surname;
-        this.age = age;
-    }
 
     // Getters
     public int getUserID() {return 0;/*via database ophalen*/}
-
-    public static int getUserCounter() {return userCounter;}
 
     public String getName() {return name;}
 
