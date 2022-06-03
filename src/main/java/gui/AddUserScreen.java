@@ -5,36 +5,34 @@ import entity.User;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AddUserScreen extends JFrame {
-    private JFrame jframe;
-    private JLabel formTitle;
-    private JLabel nameLabel;
-    private JTextField nameField;
-    private JLabel surnameLabel;
-    private JTextField surnameField;
-    private JLabel DOBLabel;
-    private JFormattedTextField DOBField;
-    private JLabel genderLabel;
-    private JRadioButton optionM;
-    private JRadioButton optionV;
-    private JRadioButton optionX;
-    private ButtonGroup genderGroup;
-    private JLabel beerLabel;
-    private JTextField beerField;
-    private JLabel professionLabel;
-    private JTextField professionField;
-    private JLabel residenceLabel;
-    private JTextField residenceField;
-    private JLabel emailLabel;
-    private JTextField emailField;
-    private JButton saveButton;
+    private final JFrame jframe;
+    private final JLabel formTitle;
+    private final JLabel nameLabel;
+    private final JTextField nameField;
+    private final JLabel surnameLabel;
+    private final JTextField surnameField;
+    private final JLabel DOBLabel;
+    private final JFormattedTextField DOBField;
+    private final JLabel genderLabel;
+    private final JRadioButton optionM;
+    private final JRadioButton optionV;
+    private final JRadioButton optionX;
+    private final JLabel beerLabel;
+    private final JTextField beerField;
+    private final JLabel professionLabel;
+    private final JTextField professionField;
+    private final JLabel residenceLabel;
+    private final JTextField residenceField;
+    private final JLabel emailLabel;
+    private final JTextField emailField;
+    private final JButton saveButton;
 
     public AddUserScreen() {
         jframe = new JFrame("MyBrews");
@@ -50,16 +48,15 @@ public class AddUserScreen extends JFrame {
         surnameField = new JTextField(30);
         // DOB
         DOBLabel = new JLabel("DOB (YYYY-MM-DD)");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-        DateFormatter formatter = new DateFormatter(format);
-        DOBField = new JFormattedTextField(formatter);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DOBField = new JFormattedTextField(format);
         DOBField.setColumns(11);
         // Gender
         genderLabel = new JLabel("Gender");
         optionM = new JRadioButton("M");
         optionV = new JRadioButton("V");
         optionX = new JRadioButton("X");
-        genderGroup = new ButtonGroup();
+        ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(optionM);
         genderGroup.add(optionV);
         genderGroup.add(optionX);
@@ -123,11 +120,11 @@ public class AddUserScreen extends JFrame {
         layout.putConstraint(SpringLayout.WEST, genderLabel, 10, SpringLayout.WEST, jframe);
         layout.putConstraint(SpringLayout.NORTH, genderLabel, 50, SpringLayout.NORTH, DOBLabel);
         layout.putConstraint(SpringLayout.WEST, optionM, 5, SpringLayout.EAST, genderLabel);
-        layout.putConstraint(SpringLayout.NORTH, optionM, 48, SpringLayout.NORTH, DOBLabel); // 48 instead of 50 because of shape of radio buttons
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, optionM, 0, SpringLayout.VERTICAL_CENTER, genderLabel);
         layout.putConstraint(SpringLayout.WEST, optionV, 5, SpringLayout.EAST, optionM);
-        layout.putConstraint(SpringLayout.NORTH, optionV, 48, SpringLayout.NORTH, DOBLabel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, optionV, 0, SpringLayout.VERTICAL_CENTER, genderLabel);
         layout.putConstraint(SpringLayout.WEST, optionX, 5, SpringLayout.EAST, optionV);
-        layout.putConstraint(SpringLayout.NORTH, optionX, 48, SpringLayout.NORTH, DOBLabel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, optionX, 0, SpringLayout.VERTICAL_CENTER, genderLabel);
         // Layout beer
         layout.putConstraint(SpringLayout.WEST, beerLabel, 10, SpringLayout.WEST, jframe);
         layout.putConstraint(SpringLayout.NORTH, beerLabel, 50, SpringLayout.NORTH, genderLabel);
@@ -153,40 +150,36 @@ public class AddUserScreen extends JFrame {
         layout.putConstraint(SpringLayout.NORTH, saveButton, 50, SpringLayout.NORTH, emailLabel);
 
 
-        saveButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                final String name = nameField.getText();
-                final String surname = surnameField.getText();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-                final String DOBString = DOBField.getText();
-                Date DOB = null;
-                try {
-                    DOB = formatter.parse(DOBString);
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(jframe, "Please fill out a correctly formatted birthday!", "Date error", JOptionPane.WARNING_MESSAGE);
-                }
-                final java.sql.Date sqlDOB = new java.sql.Date(DOB.getTime());
-                final String gender;
-                if (optionM.isSelected()) {gender = "M";}
-                else if (optionV.isSelected()) {gender = "V";}
-                else if (optionX.isSelected()) {gender = "X";}
-                else {gender = null;} // Otherwise gender not initialised error
-                final String beer = beerField.getText();
-                final String profession = professionField.getText();
-                final String residence = residenceField.getText();
-                final String email = emailField.getText();
-                if (name != null && surname != null && DOB != null && gender != null && beer != null && profession != null && residence != null && email != null) {
-                    // Put fields in user to pass to saveUser function
-                    User u = new User(name, surname, sqlDOB, gender, beer, profession, residence, email);
-                    UserDAO udao = new UserDAO();
-                    // Parameter jframe to show dialogs from saveUser function
-                    udao.saveUser(u, jframe);
-                }
-                else {
-                    JOptionPane.showMessageDialog(jframe, "Please fill out all fields!", "Empty form", JOptionPane.WARNING_MESSAGE);
-                }
+        saveButton.addActionListener(e -> {
+            final String name = nameField.getText();
+            final String surname = surnameField.getText();
+            final String DOBString = DOBField.getText();
+            // Could cast the above directly to Date with .getValue() and then to sql.Date, but try-catch block for parsing helps with issuing warning
+            Date DOB = null;
+            try {
+                DOB = format.parse(DOBString);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(jframe, "Please fill out a correctly formatted birthday!", "Date error", JOptionPane.WARNING_MESSAGE);
+            }
+            final java.sql.Date sqlDOB = new java.sql.Date(DOB.getTime());
+            final String gender;
+            if (optionM.isSelected()) {gender = "M";}
+            else if (optionV.isSelected()) {gender = "V";}
+            else if (optionX.isSelected()) {gender = "X";}
+            else {gender = null;} // Otherwise gender not initialised error
+            final String beer = beerField.getText();
+            final String profession = professionField.getText();
+            final String residence = residenceField.getText();
+            final String email = emailField.getText();
+            if (name != null && surname != null && sqlDOB != null && gender != null && beer != null && profession != null && residence != null && email != null) {
+                // Put fields in user to pass to saveUser function
+                User u = new User(name, surname, sqlDOB, gender, beer, profession, residence, email);
+                UserDAO udao = new UserDAO();
+                // Parameter jframe to show dialogs from saveUser function
+                udao.saveUser(u, jframe);
+            }
+            else {
+                JOptionPane.showMessageDialog(jframe, "Please fill out all fields!", "Empty form", JOptionPane.WARNING_MESSAGE);
             }
         });
         jframe.setLocationRelativeTo(null); // Center of screen
@@ -195,6 +188,6 @@ public class AddUserScreen extends JFrame {
     }
 
     public static void main(String[] args) {
-        AddUserScreen s = new AddUserScreen();
+        new AddUserScreen();
     }
 }

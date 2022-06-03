@@ -1,11 +1,9 @@
 package dao;
 
+import entity.User;
+
 import java.sql.*;
 import java.util.ArrayList;
-
-import entity.User;
-import gui.AddUserScreen;
-
 import javax.swing.*;
 
 public class UserDAO extends BaseDAO{
@@ -35,7 +33,7 @@ public class UserDAO extends BaseDAO{
                 ps.setString(1, u.getName());
                 ps.setString(2, u.getSurname());
                 ps.setDate(3, (Date) u.getDOB());
-                ps.setString(4, u.getGender().toString());
+                ps.setString(4, u.getGender());
                 ps.setString(5, u.getFavoriteBeer());
                 ps.setString(6, u.getProfession());
                 ps.setString(7, u.getResidence());
@@ -99,7 +97,7 @@ public class UserDAO extends BaseDAO{
             ps.setString(1, (String)name); // Cast to string
             ps.setString(2, (String)surname);
             ps.setString(3, (String)email);
-            // Returns int
+            // Returns int (amount of rows deleted)
             int checkIfDeleted = ps.executeUpdate();
             System.out.println(checkIfDeleted);
             if(checkIfDeleted != 0) {
