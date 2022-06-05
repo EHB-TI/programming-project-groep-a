@@ -7,12 +7,11 @@
 .header {
     min-height: 100vh;
     width: 100%;
-    background-image: linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url("Bierbrouwerij-1140x483.jpg");
+    background-image: linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url("/images/Bierbrouwerij-1140x483.jpg");
     background-position: center;
     position: relative;
     background-size: cover;
 }
-
 
 nav {
     display: flex;
@@ -146,7 +145,15 @@ nav.fa {
     padding-top: 100px;
 }
 
+#breweryselect{
+    background-image: url(/images/haacht.jpg);
+    background-position: center;
+}
 
+#beerselect{
+    background-image: url(/images/super8.png);
+    background-position: center;
+}
 .information{
 
     text-decoration: underline;
