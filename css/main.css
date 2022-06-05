@@ -146,12 +146,12 @@ nav.fa {
 }
 
 #breweryselect{
-    background-image: url(/images/haacht.jpg);
+    background-image: url(/images/haacht-cropped.jpg);
     background-position: center;
 }
 
 #beerselect{
-    background-image: url(/images/super8.png);
+    background-image: url(/images/super8-cropped.jpg);
     background-position: center;
 }
 .information{
