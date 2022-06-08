@@ -9,7 +9,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 // Also for deleting users
-public class FindUserScreen extends JFrame {
+public class FindUserScreen {
+
     private final JFrame jframe;
     private final JLabel findTitle;
     private final JLabel nameInputLabel;
@@ -22,7 +23,7 @@ public class FindUserScreen extends JFrame {
     private final JScrollPane tablePane;
     private final JTable displayUserTable;
     private final JButton deleteButton;
-    private final JButton beerButton;
+    private final JButton checkUserButton;
 
     public FindUserScreen() {
         jframe = new JFrame("MyBrews");
@@ -56,7 +57,7 @@ public class FindUserScreen extends JFrame {
         tablePane.setPreferredSize(new Dimension(675, 300));
         tablePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         // Beer button
-        beerButton = new JButton("View or add to last user's beers");
+        checkUserButton = new JButton("View or add to last user's beers");
         // Delete button
         deleteButton = new JButton("Delete user in last row!");
 
@@ -73,7 +74,7 @@ public class FindUserScreen extends JFrame {
         jframe.add(searchButton);
         jframe.add(tablePane);
         jframe.add(deleteButton);
-        jframe.add(beerButton);
+        jframe.add(checkUserButton);
 
         // Layout title
         layout.putConstraint(SpringLayout.WEST, findTitle, 10, SpringLayout.WEST, jframe);
@@ -100,8 +101,8 @@ public class FindUserScreen extends JFrame {
         layout.putConstraint(SpringLayout.WEST, tablePane, 10, SpringLayout.WEST, jframe);
         layout.putConstraint(SpringLayout.NORTH, tablePane, 50, SpringLayout.NORTH, emailInputLabel);
         // Layout beer button
-        layout.putConstraint(SpringLayout.EAST, beerButton, -10, SpringLayout.HORIZONTAL_CENTER, tablePane);
-        layout.putConstraint(SpringLayout.NORTH, beerButton, 20, SpringLayout.SOUTH, tablePane);
+        layout.putConstraint(SpringLayout.EAST, checkUserButton, -10, SpringLayout.HORIZONTAL_CENTER, tablePane);
+        layout.putConstraint(SpringLayout.NORTH, checkUserButton, 20, SpringLayout.SOUTH, tablePane);
         // Layout delete button
         layout.putConstraint(SpringLayout.WEST, deleteButton, 10, SpringLayout.HORIZONTAL_CENTER, tablePane);
         layout.putConstraint(SpringLayout.NORTH, deleteButton, 20, SpringLayout.SOUTH, tablePane);
@@ -122,7 +123,7 @@ public class FindUserScreen extends JFrame {
             }
         });
 
-        beerButton.addActionListener(e -> {
+        checkUserButton.addActionListener(e -> {
             UserDAO udao = new UserDAO();
             udao.selectUser(displayUserTable, jframe);
         });

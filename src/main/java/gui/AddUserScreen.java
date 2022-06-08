@@ -11,7 +11,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class AddUserScreen extends JFrame {
+public class AddUserScreen {
+
     private final JFrame jframe;
     private final JLabel formTitle;
     private final JLabel nameLabel;
@@ -151,8 +152,8 @@ public class AddUserScreen extends JFrame {
 
 
         saveButton.addActionListener(e -> {
-            final String name = nameField.getText();
-            final String surname = surnameField.getText();
+            final String name = nameField.getText().trim();
+            final String surname = surnameField.getText().trim();
             final String DOBString = DOBField.getText();
             // Could cast the above directly to Date with .getValue() and then to sql.Date, but try-catch block for parsing helps with issuing warning
             Date DOB = null;
@@ -167,11 +168,11 @@ public class AddUserScreen extends JFrame {
             else if (optionV.isSelected()) {gender = "V";}
             else if (optionX.isSelected()) {gender = "X";}
             else {gender = null;} // Otherwise gender not initialised error
-            final String beer = beerField.getText();
-            final String profession = professionField.getText();
-            final String residence = residenceField.getText();
-            final String email = emailField.getText();
-            if (name != null && surname != null && sqlDOB != null && gender != null && beer != null && profession != null && residence != null && email != null) {
+            final String beer = beerField.getText().trim();
+            final String profession = professionField.getText().trim();
+            final String residence = residenceField.getText().trim();
+            final String email = emailField.getText().trim();
+            if (!name.isBlank() && !surname.isBlank() && gender != null && !beer.isBlank() && !profession.isBlank() && !residence.isBlank() && !email.isBlank()) {
                 // Put fields in user to pass to saveUser function
                 User u = new User(name, surname, sqlDOB, gender, beer, profession, residence, email);
                 UserDAO udao = new UserDAO();
@@ -183,8 +184,8 @@ public class AddUserScreen extends JFrame {
             }
         });
         jframe.setLocationRelativeTo(null); // Center of screen
-        jframe.setVisible(true);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.setVisible(true);
     }
 
     public static void main(String[] args) {
