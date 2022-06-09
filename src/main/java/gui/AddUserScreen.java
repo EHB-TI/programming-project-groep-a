@@ -4,8 +4,6 @@ import dao.UserDAO;
 import entity.User;
 
 import javax.swing.*;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

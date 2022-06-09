@@ -6,7 +6,7 @@ import java.util.Date;
 public class User implements Comparable<User>{
     //members
     private String name, surname, favoriteBeer, profession, residence, email;
-    // Maybe work with date of birth
+    private int userID;
     private Date DOB, joiningDate;
     private String gender;
 
@@ -21,8 +21,9 @@ public class User implements Comparable<User>{
         this.email = email;
     }
     // This constructor is for reading a user from the database as it
-    // contains the automatically generated (upon user addition) joiningDate
-    public User(String name, String surname, Date DOB, String gender,  String favoriteBeer, String profession,  String residence, String email, Date joiningDate) {
+    // contains the automatically generated (upon user addition) joiningDate as well as ID
+    public User(int userID, String name, String surname, Date DOB, String gender,  String favoriteBeer, String profession,  String residence, String email, Date joiningDate) {
+        this.userID = userID;
         this.name = name;
         this.surname = surname;
         this.DOB = DOB;
@@ -35,7 +36,7 @@ public class User implements Comparable<User>{
     }
 
     // Getters
-    public int getUserID() {return 0;/*via database ophalen*/}
+    public int getUserID() {return userID;}
 
     public String getName() {return name;}
 

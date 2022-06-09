@@ -4,10 +4,12 @@ import dao.UserDAO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 
 public class CheckUserScreen {
     private JFrame newFrame;
@@ -47,7 +49,7 @@ public class CheckUserScreen {
         tableInfo1.setFont(new Font("Tahoma", Font.PLAIN, 14));
         tableInfo2 = new JLabel("Beers can also be added or removed here.");
         tableInfo2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        tableInfo3 = new JLabel("Beers can also be added or removed here.");
+        tableInfo3 = new JLabel("This user hasn't drank or added any beers yet!"); // Will be replaced
         tableInfo3.setFont(new Font("Tahoma", Font.ITALIC, 14));
         // Prepare table to show search results
         String[] header = {"Beer name", "Variant name", "percentage", "Color", "Brewery"};
@@ -71,12 +73,14 @@ public class CheckUserScreen {
         beerAdd = new JTextField(" Beer name ");
         variantAdd = new JTextField(" Beer variant ");
 
-
-        NumberFormat numFormat = new DecimalFormat("##.#");
-        NumberFormatter numFormatter = new NumberFormatter(numFormat);
-        percentageAdd = new JFormattedTextField(numFormatter);
-
-        percentageAdd.setValue(0.0);
+        try {
+            MaskFormatter formatter = new MaskFormatter("##.#"); // A possible '0' in front (e.g. 09.0) is parsed away
+            formatter.setPlaceholderCharacter('0');
+            percentageAdd = new JFormattedTextField(formatter);
+            percentageAdd.setColumns(3);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         percentageLabel = new JLabel("%");
 
         colorAdd = new JTextField(" Beer color ");
@@ -164,7 +168,6 @@ public class CheckUserScreen {
 
         layout.putConstraint(SpringLayout.WEST, removeBeerButton, 10, SpringLayout.WEST, newFrame);
         layout.putConstraint(SpringLayout.NORTH, removeBeerButton, 15, SpringLayout.SOUTH, variantRemove);
-
 
 
         addBeerButton.addActionListener(e -> {

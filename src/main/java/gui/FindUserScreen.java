@@ -41,8 +41,9 @@ public class FindUserScreen {
         // Search button
         searchButton = new JButton("Search user!");
         // Prepare table to show search results
-        String[] header = {"Name", "Surname", "DOB", "Gender", "Favorite beer", "Profession", "Residence", "e-mail", "Date joined"};
+        String[] header = {"Name", "Surname", "DOB", "Gender", "Favorite beer", "Profession", "Residence", "e-mail", "Date joined", "id"};
         DefaultTableModel model = new DefaultTableModel(header, 0) {
+
             // Make jtable cells uneditable
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -51,13 +52,15 @@ public class FindUserScreen {
             }
         };
         displayUserTable = new JTable(model);
+        displayUserTable.removeColumn(displayUserTable.getColumn("id")); // Hide id column
         displayUserTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+        displayUserTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Select only one at a time
         // Table will go in scroll pane, if you click search again, another row is added to the table
         tablePane = new JScrollPane(displayUserTable);
         tablePane.setPreferredSize(new Dimension(675, 300));
         tablePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         // Beer button
-        checkUserButton = new JButton("View or add to last user's beers");
+        checkUserButton = new JButton("View selected user's beers");
         // Delete button
         deleteButton = new JButton("Delete user in last row!");
 
@@ -109,11 +112,11 @@ public class FindUserScreen {
 
         searchButton.addActionListener(e -> {
             UserDAO udao = new UserDAO();
-            ArrayList<User> usersFound = udao.findUser(nameInputField.getText(), surnameInputField.getText(), emailInputField.getText()); // usersFound.get(0) is null if no users found
+            ArrayList<User> usersFound = udao.findUser(nameInputField.getText(), surnameInputField.getText(), emailInputField.getText());
             // User found
             if (usersFound.size() != 0) {
                 for (User u : usersFound) {
-                    String[] tableData = {u.getName(), u.getSurname(), u.getDOB().toString(), u.getGender(), u.getFavoriteBeer(), u.getProfession(), u.getResidence(), u.getEmail(), u.getJoiningDate().toString()};
+                    String[] tableData = {u.getName(), u.getSurname(), u.getDOB().toString(), u.getGender(), u.getFavoriteBeer(), u.getProfession(), u.getResidence(), u.getEmail(), u.getJoiningDate().toString(), Integer.toString(u.getUserID())};
                     model.addRow(tableData);
                 }
             }
