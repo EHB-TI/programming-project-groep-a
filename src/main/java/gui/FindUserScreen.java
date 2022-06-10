@@ -10,7 +10,7 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static gui.MainScreen.beerglass;
+import static gui.MainScreen.beerGlass;
 
 // Also for deleting users
 public class FindUserScreen {
@@ -23,7 +23,7 @@ public class FindUserScreen {
 
     public FindUserScreen() {
         jframe = new JFrame("MyBrews");
-        jframe.setIconImage(beerglass.getImage());
+        jframe.setIconImage(beerGlass.getImage());
         jframe.setSize(710,600);
         // Form title
         JLabel findTitle = new JLabel("Find someone in the MyBrews database");
@@ -181,7 +181,7 @@ public class FindUserScreen {
 
         jframe.setLocationRelativeTo(null); // Center of screen
         jframe.setVisible(true);
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
 

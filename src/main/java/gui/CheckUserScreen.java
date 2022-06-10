@@ -12,7 +12,7 @@ import java.awt.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import static gui.MainScreen.beerglass;
+import static gui.MainScreen.beerGlass;
 
 public class CheckUserScreen {
 
@@ -36,7 +36,7 @@ public class CheckUserScreen {
     public CheckUserScreen (User u) {
 
         beersFrame = new JFrame("MyBrews");
-        beersFrame.setIconImage(beerglass.getImage());
+        beersFrame.setIconImage(beerGlass.getImage());
         beersFrame.setSize(450, 580);
         // User name title
         JLabel userTitle = new JLabel(u.getName() + " " + u.getSurname());

@@ -8,7 +8,7 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
-import static gui.MainScreen.beerglass;
+import static gui.MainScreen.beerGlass;
 
 
 public class AddUserScreen {
@@ -27,7 +27,7 @@ public class AddUserScreen {
 
     public AddUserScreen() {
         jframe = new JFrame("MyBrews");
-        jframe.setIconImage(beerglass.getImage());
+        jframe.setIconImage(beerGlass.getImage());
         jframe.setSize(450,550);
         // Form title
         JLabel formTitle = new JLabel("Add someone to the MyBrews database");
@@ -174,7 +174,7 @@ public class AddUserScreen {
             }
         });
         jframe.setLocationRelativeTo(null); // Center of screen
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jframe.setVisible(true);
     }
 
