@@ -5,53 +5,46 @@ import entity.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+
+import static gui.MainScreen.beerglass;
+
 
 public class AddUserScreen {
 
     private final JFrame jframe;
-    private final JLabel formTitle;
-    private final JLabel nameLabel;
     private final JTextField nameField;
-    private final JLabel surnameLabel;
     private final JTextField surnameField;
-    private final JLabel DOBLabel;
     private final JFormattedTextField DOBField;
-    private final JLabel genderLabel;
     private final JRadioButton optionM;
     private final JRadioButton optionV;
     private final JRadioButton optionX;
-    private final JLabel beerLabel;
     private final JTextField beerField;
-    private final JLabel professionLabel;
     private final JTextField professionField;
-    private final JLabel residenceLabel;
     private final JTextField residenceField;
-    private final JLabel emailLabel;
     private final JTextField emailField;
-    private final JButton saveButton;
 
     public AddUserScreen() {
         jframe = new JFrame("MyBrews");
+        jframe.setIconImage(beerglass.getImage());
         jframe.setSize(450,550);
         // Form title
-        formTitle = new JLabel("Add someone to the MyBrews database");
+        JLabel formTitle = new JLabel("Add someone to the MyBrews database");
         formTitle.setFont(new Font("Tahoma", Font.BOLD, 18));
         // Name
-        nameLabel = new JLabel("Name");
+        JLabel nameLabel = new JLabel("Name");
         nameField = new JTextField(30);
         // Surname
-        surnameLabel = new JLabel("Surname");
+        JLabel surnameLabel = new JLabel("Surname");
         surnameField = new JTextField(30);
         // DOB
-        DOBLabel = new JLabel("DOB (YYYY-MM-DD)");
+        JLabel DOBLabel = new JLabel("DOB (YYYY-MM-DD)");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         DOBField = new JFormattedTextField(format);
         DOBField.setColumns(11);
         // Gender
-        genderLabel = new JLabel("Gender");
+        JLabel genderLabel = new JLabel("Gender");
         optionM = new JRadioButton("M");
         optionV = new JRadioButton("V");
         optionX = new JRadioButton("X");
@@ -60,19 +53,19 @@ public class AddUserScreen {
         genderGroup.add(optionV);
         genderGroup.add(optionX);
         // Favorite beer
-        beerLabel = new JLabel("Favorite beer");
+        JLabel beerLabel = new JLabel("Favorite beer");
         beerField = new JTextField(30);
         // Profession
-        professionLabel = new JLabel("Profession");
+        JLabel professionLabel = new JLabel("Profession");
         professionField = new JTextField(30);
         // Residence
-        residenceLabel = new JLabel("Residence");
+        JLabel residenceLabel = new JLabel("Residence");
         residenceField = new JTextField(30);
         // Email
-        emailLabel = new JLabel("e-mail address");
+        JLabel emailLabel = new JLabel("e-mail address");
         emailField = new JTextField(30);
         // Save user button
-        saveButton = new JButton("Add user to database!");
+        JButton saveButton = new JButton("Add user to database!");
 
         SpringLayout layout = new SpringLayout();
         jframe.setLayout(layout);
@@ -153,14 +146,13 @@ public class AddUserScreen {
             final String name = nameField.getText().trim();
             final String surname = surnameField.getText().trim();
             final String DOBString = DOBField.getText();
-            // Could cast the above directly to Date with .getValue() and then to sql.Date, but try-catch block for parsing helps with issuing warning
-            Date DOB = null;
+            LocalDate DOB;
             try {
-                DOB = format.parse(DOBString);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(jframe, "Please fill out a correctly formatted birthday!", "Date error", JOptionPane.WARNING_MESSAGE);
+                DOB = LocalDate.parse(DOBString);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(jframe, "Please fill out a correct date!", "Incorrect date format", JOptionPane.WARNING_MESSAGE);
+                return; // Stop method, otherwise the 'fill out all fields' dialog will also unnecessarily be shown
             }
-            final java.sql.Date sqlDOB = new java.sql.Date(DOB.getTime());
             final String gender;
             if (optionM.isSelected()) {gender = "M";}
             else if (optionV.isSelected()) {gender = "V";}
@@ -170,9 +162,9 @@ public class AddUserScreen {
             final String profession = professionField.getText().trim();
             final String residence = residenceField.getText().trim();
             final String email = emailField.getText().trim();
-            if (!name.isBlank() && !surname.isBlank() && gender != null && !beer.isBlank() && !profession.isBlank() && !residence.isBlank() && !email.isBlank()) {
+            if (!name.isBlank() && !surname.isBlank() && DOB != null && gender != null && !beer.isBlank() && !profession.isBlank() && !residence.isBlank() && !email.isBlank()) {
                 // Put fields in user to pass to saveUser function
-                User u = new User(name, surname, sqlDOB, gender, beer, profession, residence, email);
+                User u = new User(name, surname, DOB, gender, beer, profession, residence, email);
                 UserDAO udao = new UserDAO();
                 // Parameter jframe to show dialogs from saveUser function
                 udao.saveUser(u, jframe);

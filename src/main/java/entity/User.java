@@ -1,16 +1,16 @@
 package entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 //implements Comparable because entity. Event class wants to add users to a visitors TreeSet
 public class User implements Comparable<User>{
     //members
     private String name, surname, favoriteBeer, profession, residence, email;
     private int userID;
-    private Date DOB, joiningDate;
+    private LocalDate DOB, joiningDate;
     private String gender;
 
-    public User(String name, String surname, Date DOB, String gender, String favoriteBeer, String profession,  String residence, String email) {
+    public User(String name, String surname, LocalDate DOB, String gender, String favoriteBeer, String profession,  String residence, String email) {
         this.name = name;
         this.surname = surname;
         this.DOB = DOB;
@@ -22,7 +22,7 @@ public class User implements Comparable<User>{
     }
     // This constructor is for reading a user from the database as it
     // contains the automatically generated (upon user addition) joiningDate as well as ID
-    public User(int userID, String name, String surname, Date DOB, String gender,  String favoriteBeer, String profession,  String residence, String email, Date joiningDate) {
+    public User(int userID, String name, String surname, LocalDate DOB, String gender,  String favoriteBeer, String profession,  String residence, String email, LocalDate joiningDate) {
         this.userID = userID;
         this.name = name;
         this.surname = surname;
@@ -48,13 +48,13 @@ public class User implements Comparable<User>{
 
     public String getResidence() {return residence;}
 
-    public Date getDOB() {return DOB;}
+    public LocalDate getDOB() {return DOB;}
 
     public String getGender() {return gender;}
 
     public String getEmail() {return email;}
 
-    public Date getJoiningDate() {return joiningDate;}
+    public LocalDate getJoiningDate() {return joiningDate;}
 
     // Setters
     public void setName(String name) {this.name = name;}
@@ -67,7 +67,7 @@ public class User implements Comparable<User>{
 
     public void setResidence(String residence) {this.residence = residence;}
 
-    public void setDOB(Date DOB) {this.DOB = DOB;}
+    public void setDOB(LocalDate DOB) {this.DOB = DOB;}
 
     public void setGender(String gender) {this.gender = gender;}
 

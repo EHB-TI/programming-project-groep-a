@@ -1,17 +1,18 @@
 package dao;
 
+import entity.Beer;
 import entity.User;
-import gui.CheckUserScreen;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 public class UserDAO extends BaseDAO{
 
     // Pass jframe to display jdialogs
+    // Otherwise split in checkDuplicateUser and saveUser to call upon from FindUserScreen and show jdialog from there
+    // But then connection has to be opened twice
     public void saveUser(User u, JFrame jframe)
     {
         try(Connection conn = getConn()){
@@ -35,7 +36,7 @@ public class UserDAO extends BaseDAO{
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `geboortedatum`, `geslacht`, `favobier`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,?,?,?,?,?,?,?,?,?)");
                 ps.setString(1, u.getName());
                 ps.setString(2, u.getSurname());
-                ps.setDate(3, (Date) u.getDOB());
+                ps.setDate(3, java.sql.Date.valueOf(u.getDOB()));
                 ps.setString(4, u.getGender());
                 ps.setString(5, u.getFavoriteBeer());
                 ps.setString(6, u.getProfession());
@@ -54,7 +55,7 @@ public class UserDAO extends BaseDAO{
         ArrayList<User> usersFound = new ArrayList<>();
         String name, surname, gender, beer, profession, residence, email;
         int userID;
-        Date DOB, joiningDate;
+        String DOB, joiningDate;
         try (Connection conn = getConn()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM gebruikers WHERE voornaam = ? OR achternaam = ? OR email = ?");
             // Searching is not case-sensitive!
@@ -66,14 +67,14 @@ public class UserDAO extends BaseDAO{
                 userID = rs.getInt("gebruikersid");
                 name = rs.getString("voornaam");
                 surname = rs.getString("achternaam");
-                DOB = rs.getDate("geboortedatum");
+                DOB = rs.getString("geboortedatum");
                 gender = rs.getString("geslacht");
                 beer = rs.getString("favobier");
                 profession = rs.getString("beroep");
                 residence = rs.getString("woonplaats");
                 email = rs.getString("email");
-                joiningDate = rs.getDate("toetreding");
-                User u = new User(userID, name, surname, DOB, gender, beer, profession, residence, email, joiningDate);
+                joiningDate = rs.getString("toetreding");
+                User u = new User(userID, name, surname, LocalDate.parse(DOB), gender, beer, profession, residence, email, LocalDate.parse(joiningDate));
                 usersFound.add(u);
             }
         } catch (Exception e) {
@@ -86,54 +87,32 @@ public class UserDAO extends BaseDAO{
     // Deletes the user in the last row of the table shown in the FindUserScreen GUI
     // That is where the last user searched appears
     // ALSO DELETE LINKS IN TABLE
-    public void deleteUser(JTable jtable, JFrame jframe)
+    public int[] deleteUser(int userID)
     {
-        int userRow = jtable.getSelectedRow(); // Value -1 if none selected
-        if (userRow == -1) {
-            JOptionPane.showMessageDialog(jframe, "You must first search or select a user.", "No user selected", JOptionPane.WARNING_MESSAGE);
-        }
-        else {
-            String userIDString = (String)jtable.getModel().getValueAt(userRow, 9);
-            int userID = Integer.parseInt(userIDString); // Difficulties with direct casting from object to int
-
-            try (Connection conn = getConn()) {
+        int[] checkIfDeleted = new int[2];
+        try (Connection conn = getConn()) {
                 // Delete user's beers
                 PreparedStatement psLink = conn.prepareStatement("DELETE FROM gedronkenbieren WHERE gebruikersid = ?");
                 psLink.setInt(1, userID);
-                int beersDeleted = psLink.executeUpdate();
+                checkIfDeleted[0] = psLink.executeUpdate();
                 // Delete user
                 PreparedStatement psDelete = conn.prepareStatement("DELETE FROM gebruikers WHERE gebruikersid = ?");
                 psDelete.setInt(1, userID);
                 // Returns int amount of rows deleted
-                int checkIfDeleted = psDelete.executeUpdate();
-                if (checkIfDeleted != 0) {
-                    JOptionPane.showMessageDialog(jframe, "The user and the user's " + beersDeleted + " beers have been deleted!", "User deleted", JOptionPane.PLAIN_MESSAGE);
-                }
-                // Delete error
-                else {
-                    JOptionPane.showMessageDialog(jframe, "The user has already been deleted or doesn't exist. Try selecting another user first.", "User delete failed", JOptionPane.WARNING_MESSAGE);
-                }
+                checkIfDeleted[1] = psDelete.executeUpdate();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        return checkIfDeleted;
+
     }
 
-    public void selectUser(JTable jtable, JFrame jframe)
+    public ArrayList<Beer> selectUser(int userID)
     {
-        String beerName, variant, percentage, color, brewery;
-        int userRow = jtable.getSelectedRow(); // Value -1 if none selected
-        if (userRow == -1) {
-            JOptionPane.showMessageDialog(jframe, "You must first search or select a user.", "No user selected", JOptionPane.WARNING_MESSAGE);
-        }
-        else {
-            String name = (String)jtable.getModel().getValueAt(userRow, 0); // Returns object, cast to String
-            String surname = (String)jtable.getModel().getValueAt(userRow, 1);
-            String email = (String)jtable.getModel().getValueAt(userRow, 7);
-            String userIDString = (String)jtable.getModel().getValueAt(userRow, 9);
-            int userID = Integer.parseInt(userIDString); // Difficulties with direct casting from object to int
-            // New screen to display user's beers
-            CheckUserScreen cus = new CheckUserScreen(name, surname, email, userID);
+        ArrayList<Beer> beersFound = new ArrayList<>();
+        String beerName, variant, color, brewery;
+        double percentage;
+        int beerID;
             try (Connection conn = getConn()) {
                 PreparedStatement ps = conn.prepareStatement("SELECT b.* FROM gebruikers g JOIN gedronkenbieren gb ON g.gebruikersid = gb.gebruikersid JOIN bieren b ON b.bierid = gb.bierid WHERE g.gebruikersid = ? ORDER BY biernaam, variant");
                 ps.setString(1, Integer.toString(userID));
@@ -143,90 +122,88 @@ public class UserDAO extends BaseDAO{
                     // Beers already ordered by name and then variant in SQL query
                     beerName = rs.getString("biernaam");
                     variant = rs.getString("variant");
-                    percentage = rs.getString("percentage");
+                    percentage = rs.getDouble("percentage");
                     color = rs.getString("kleur");
                     brewery = rs.getString("brouwerij");
+                    beerID = rs.getInt("bierid");
 
-                    String[] tableData = {beerName, variant, percentage, color, brewery};
-                    cus.addToTable(tableData, name);
+                    Beer b = new Beer(beerID, beerName, variant, percentage, color, brewery);
+                    beersFound.add(b);
                 }
             }catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+
+        return beersFound;
     }
 
-    public void addUserBeer(String beerName, String variant, double percentage, String color, String brewery, JFrame jframe, JTable table, DefaultTableModel model, int userID)
+    // Returns same b object but with beerID added
+    public Beer addUserBeer(Beer b, int userID)
     {
-        boolean duplicate = false;
-        // Check for duplicates based on name and variant
-        // Check if beer already in user table
-        for(int i = 0; i < table.getRowCount(); i++){ // For each row, check first two columns
-            if(table.getModel().getValueAt(i, 0).toString().equalsIgnoreCase(beerName) && table.getModel().getValueAt(i, 1).toString().equalsIgnoreCase(variant)) {
-                    JOptionPane.showMessageDialog(jframe, "The user already drank this beer!", "Duplicate beer", JOptionPane.WARNING_MESSAGE);
-                    duplicate = true;
-            }
-        }
-        if (!duplicate) {
             try (Connection conn = getConn()) {
                 // Check if beer already in database
                 PreparedStatement psCheck = conn.prepareStatement("SELECT bierid FROM bieren WHERE biernaam = ? AND variant = ?");
-                psCheck.setString(1, beerName);
-                psCheck.setString(2, variant);
+                psCheck.setString(1, b.getName());
+                psCheck.setString(2, b.getVariant());
                 ResultSet rs = psCheck.executeQuery();
-                // Beer already exists --> add to jtable and user-beer table
+                // Beer already exists --> add to gedronkenbieren table
                 if (rs.next()) {
-                    // Add to jtable
-                    addNewBeerToTable(beerName, variant, percentage, color, brewery, table, model);
-                    // Add to table user-beers
+                    // Add to table gedronkenbieren
                     // Get user id and beer id
+
                     int beerID = rs.getInt("bierid");
+                    // Add to beer object and hidden id column in jtable (for remove)
+                    b.setBeerID(beerID);
                     PreparedStatement psLinkTable = conn.prepareStatement("INSERT INTO `gedronkenbieren`(`gebruikersid`, `bierid`) VALUES (?,?)");
                     psLinkTable.setInt(1, userID);
                     psLinkTable.setInt(2, beerID);
                     psLinkTable.executeUpdate();
-                    JOptionPane.showMessageDialog(jframe, "Beer added!");
                 }
-                // Beer doesn't exist yet --> add to jtable AND database
+                // Beer doesn't exist yet --> add to bieren and gedronkenbieren
                 else {
-                    // Add to jtable
-                    addNewBeerToTable(beerName, variant, percentage, color, brewery, table, model);
                     // Add to database
                     PreparedStatement ps = conn.prepareStatement("INSERT INTO `bieren`(`bierid`, `biernaam`, `variant`, `percentage`, `kleur`, `brouwerij`) VALUES (NULL,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, beerName);
-                    ps.setString(2, variant);
-                    ps.setDouble(3, percentage);
-                    ps.setString(4, color);
-                    ps.setString(5, brewery);
+                    ps.setString(1, b.getName());
+                    ps.setString(2, b.getVariant());
+                    ps.setDouble(3, b.getAlcoholPercentage());
+                    ps.setString(4, b.getColor());
+                    ps.setString(5, b.getBrewery());
                     ps.executeUpdate();
                     // Add to table user-beers
                     ResultSet rsID = ps.getGeneratedKeys();
                     int beerID = -1;
-                    if (rsID.next()) {beerID = rsID.getInt(1);}
+                    if (rsID.next()) {
+                        beerID = rsID.getInt(1);
+                        // Add to beer object and hidden id column in jtable (for remove)
+                        b.setBeerID(beerID);
+                    }
                     PreparedStatement psLinkTable = conn.prepareStatement("INSERT INTO `gedronkenbieren`(`gebruikersid`, `bierid`) VALUES (?,?)");
                     psLinkTable.setInt(1, userID);
                     psLinkTable.setInt(2, beerID);
                     psLinkTable.executeUpdate();
-
-                    JOptionPane.showMessageDialog(jframe, "Beer added!");
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
+            return b;
     } // End of addUserBeer
 
-    private void addNewBeerToTable(String beerName, String variant, double percentage, String color, String brewery, JTable table, DefaultTableModel model) {
-        String[] tableData = {beerName, variant, String.valueOf(percentage), color, brewery};
-        model.addRow(tableData);
-        // Re-sort table
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
-        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
-        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-        sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
-        sorter.setSortKeys(sortKeys);
+
+
+    public int removeBeer(int beerID, int userID)
+    {
+        int checkIfDeleted = 0;
+        try (Connection conn = getConn()) {
+            // Delete user's beer in question
+            PreparedStatement psLink = conn.prepareStatement("DELETE FROM gedronkenbieren WHERE bierid = ? AND gebruikersid = ?");
+            psLink.setInt(1, beerID);
+            psLink.setInt(2, userID);
+            checkIfDeleted = psLink.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return checkIfDeleted;
     }
 
 
