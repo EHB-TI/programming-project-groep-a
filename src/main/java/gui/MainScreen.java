@@ -12,7 +12,7 @@ public class MainScreen {
 
     public MainScreen() {
         JFrame mainFrame = new JFrame("MyBrews");
-        mainFrame.setSize(450, 350);
+        mainFrame.setSize(450, 500);
         mainFrame.setIconImage(beerGlass.getImage());
         // Form title
         JLabel mainTitle = new JLabel("Welcome to MyBrews!");
@@ -27,24 +27,39 @@ public class MainScreen {
         Image beerGlassTitleImageResized = getScaledImage(beerGlassTitleImage.getImage(), 40, 40);
         JLabel titleImageAfter = new JLabel(new ImageIcon(beerGlassTitleImageResized));
         // App description
-        JTextArea appDescription = new JTextArea(5,40);
+        JTextArea appDescription = new JTextArea(5,30);
         appDescription.setEditable(false);
+        appDescription.setText(
+                """
+                        With the MyBrews app, beer lovers can keep track of the different kinds of beers they drank throughout there lives.
+
+                        You can click the left button below to look for other users and check out their beer collection!
+
+                        Found a new beer you loved? Don't forget to add it to your collection!
+
+                        Were you a little hazy and you wrongfully added a beer to your collection? Easily remove it with the click of a button!
+
+                        If you are new here, simply click the 'Add a new user' button and fill out the form!
+
+                        Collect them all!
+                        CHEERS""");
+        appDescription.setLineWrap(true);
+        appDescription.setWrapStyleWord(true);
+        Font font = new Font("Cambria", Font.PLAIN, 15);
+        appDescription.setFont(font);
+        // appDescription.setForeground(Color.BLACK);
+        appDescription.setBackground(new Color(238, 238, 238)); // Same grey as JFrame
         // Search user button
         JButton findUser = new JButton("Look for fellow beer lovers!");
         // Add user button
         JButton addUser = new JButton("          Add a new user!          ");
-
         /*
         Dimension findUserSize = new Dimension(findUser.getSize());
         addUser.setPreferredSize(findUserSize);
 
-        Doesn't work, even if fora say that you should use preferred size with layout managers
+        Doesn't work, even if online fora say that you should use preferred size with layout managers
         So a shady solution with spaces is used
          */
-
-
-
-
 
         SpringLayout layout = new SpringLayout();
         mainFrame.setLayout(layout);
@@ -54,7 +69,6 @@ public class MainScreen {
         mainFrame.add(appDescription);
         mainFrame.add(findUser);
         mainFrame.add(addUser);
-
 
         // Layout title
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, mainTitle, 0, SpringLayout.HORIZONTAL_CENTER, mainFrame.getContentPane());
@@ -74,20 +88,13 @@ public class MainScreen {
         layout.putConstraint(SpringLayout.NORTH, addUser, 20, SpringLayout.SOUTH, appDescription);
 
 
-
-
-
         mainFrame.setLocationRelativeTo(null); // Center of screen
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
 
-        findUser.addActionListener(e -> {
-            new FindUserScreen();
-        });
+        findUser.addActionListener(e -> new FindUserScreen());
 
-        addUser.addActionListener(e -> {
-            new AddUserScreen();
-        });
+        addUser.addActionListener(e -> new AddUserScreen());
 
     }
 
