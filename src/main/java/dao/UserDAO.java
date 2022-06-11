@@ -9,6 +9,17 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class UserDAO extends BaseDAO{
+    /* FUNCTIONS in order:
+    (descriptions not 100 % detailed)
+
+    - saveUser: Takes User object from fields of AddUserScreen and saves them to database
+    - findUser: Takes name and/or surname and/or e-mail and returns ArrayList to be displayed in JTable on FindUserScreen
+    - deleteUser: Takes ID from user selected in JTable and removes user from database (not from table, could be easily implemented)
+    - selectUser: Takes ID from user selected in JTable and returns ArrayList of user's beer to be displayed in CheckUserScreen's JTable
+    - addUserBeer: Takes Beer object (without ID) from fields of CheckUserScreen and saves them to database and returns Beer object (with ID) to be added to JTable
+    - removeBeer: Takes ID from beer selected in JTable and removes it from the user-beer linking table (not entire database)
+     */
+
 
     // Pass jframe to display jdialogs
     // Otherwise split in checkDuplicateUser and saveUser to call upon from FindUserScreen and show jdialog from there
@@ -16,12 +27,13 @@ public class UserDAO extends BaseDAO{
     public void saveUser(User u, JFrame jframe)
     {
         try(Connection conn = getConn()){
-            // De timestamp van de SQL server staat 2 uur vroeger, vandaar wordt een datumvariabele vanuit java aangemaakt.
+            // Timestamp from SQL server is 2 hours early, so a date variable from Java is created.
             long millis = System.currentTimeMillis();
             java.sql.Date date = new java.sql.Date(millis);
             // Check for duplicates based on name, surname and email, these make a user unique
             // Could also change database to set those columns to unique, but Java has been chosen for practice
             // Also possible with COUNT(*)
+            // SQL injection --> PreparedStatement
             PreparedStatement psCheck = conn.prepareStatement("SELECT * FROM `gebruikers` WHERE voornaam = ? AND achternaam = ? AND email = ?");
             psCheck.setString(1, u.getName());
             psCheck.setString(2, u.getSurname());
@@ -33,6 +45,7 @@ public class UserDAO extends BaseDAO{
             }
             // User doesn't exist yet
             else {
+                // Because of date PreparedStatement instead of Statement
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO `gebruikers`(`gebruikersid`, `voornaam`, `achternaam`, `geboortedatum`, `geslacht`, `favobier`, `beroep`, `woonplaats`, `email`, `toetreding`) VALUES (NULL,?,?,?,?,?,?,?,?,?)");
                 ps.setString(1, u.getName());
                 ps.setString(2, u.getSurname());
@@ -57,6 +70,7 @@ public class UserDAO extends BaseDAO{
         int userID;
         String DOB, joiningDate;
         try (Connection conn = getConn()) {
+            // SQL injection --> PreparedStatement
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM gebruikers WHERE voornaam = ? OR achternaam = ? OR email = ?");
             // Searching is not case-sensitive!
             ps.setString(1, n);
@@ -91,18 +105,21 @@ public class UserDAO extends BaseDAO{
     {
         int[] checkIfDeleted = new int[2];
         try (Connection conn = getConn()) {
-                // Delete user's beers
-                PreparedStatement psLink = conn.prepareStatement("DELETE FROM gedronkenbieren WHERE gebruikersid = ?");
-                psLink.setInt(1, userID);
-                checkIfDeleted[0] = psLink.executeUpdate();
-                // Delete user
-                PreparedStatement psDelete = conn.prepareStatement("DELETE FROM gebruikers WHERE gebruikersid = ?");
-                psDelete.setInt(1, userID);
-                // Returns int amount of rows deleted
-                checkIfDeleted[1] = psDelete.executeUpdate();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            // Delete user's beers
+            // No SQL injection --> Statement
+            String sqlLinkTable = "DELETE FROM gedronkenbieren WHERE gebruikersid = " + userID;
+            Statement psLink = conn.createStatement();
+            // Returns int amount of beers user had
+            checkIfDeleted[0] = psLink.executeUpdate(sqlLinkTable);
+            // Delete user
+            // No SQL injection --> Statement
+            String sqlDelete = "DELETE FROM gebruikers WHERE gebruikersid = " + userID;
+            Statement psDelete = conn.createStatement();
+            // Returns int amount of rows deleted (should be 1)
+            checkIfDeleted[1] = psDelete.executeUpdate(sqlDelete);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return checkIfDeleted;
 
     }
@@ -114,9 +131,10 @@ public class UserDAO extends BaseDAO{
         double percentage;
         int beerID;
             try (Connection conn = getConn()) {
-                PreparedStatement ps = conn.prepareStatement("SELECT b.* FROM gebruikers g JOIN gedronkenbieren gb ON g.gebruikersid = gb.gebruikersid JOIN bieren b ON b.bierid = gb.bierid WHERE g.gebruikersid = ? ORDER BY biernaam, variant");
-                ps.setString(1, Integer.toString(userID));
-                ResultSet rs = ps.executeQuery();
+                // No SQL injection --> Statement
+                String sql = "SELECT b.* FROM gebruikers g JOIN gedronkenbieren gb ON g.gebruikersid = gb.gebruikersid JOIN bieren b ON b.bierid = gb.bierid WHERE g.gebruikersid = " + userID + " ORDER BY biernaam, variant";
+                Statement ps = conn.createStatement();
+                ResultSet rs = ps.executeQuery(sql);
 
                 while (rs.next()) {
                     // Beers already ordered by name and then variant in SQL query
@@ -140,26 +158,24 @@ public class UserDAO extends BaseDAO{
     // Returns same b object but with beerID added
     public Beer addUserBeer(Beer b, int userID)
     {
+        int beerID = -1;
             try (Connection conn = getConn()) {
                 // Check if beer already in database
+                // SQL injection --> Prepared Statement
                 PreparedStatement psCheck = conn.prepareStatement("SELECT bierid FROM bieren WHERE biernaam = ? AND variant = ?");
                 psCheck.setString(1, b.getName());
                 psCheck.setString(2, b.getVariant());
                 ResultSet rs = psCheck.executeQuery();
-                // Beer already exists --> add to gedronkenbieren table
+
+                // Beer already exists --> get ID from database
                 if (rs.next()) {
                     // Add to table gedronkenbieren
                     // Get user id and beer id
-
-                    int beerID = rs.getInt("bierid");
-                    // Add to beer object and hidden id column in jtable (for remove)
+                    beerID = rs.getInt("bierid");
+                    // Add ID to beer object and thus to hidden id column in jtable (for remove)
                     b.setBeerID(beerID);
-                    PreparedStatement psLinkTable = conn.prepareStatement("INSERT INTO `gedronkenbieren`(`gebruikersid`, `bierid`) VALUES (?,?)");
-                    psLinkTable.setInt(1, userID);
-                    psLinkTable.setInt(2, beerID);
-                    psLinkTable.executeUpdate();
                 }
-                // Beer doesn't exist yet --> add to bieren and gedronkenbieren
+                // Beer doesn't exist yet --> add to database and retrieve generated ID
                 else {
                     // Add to database
                     PreparedStatement ps = conn.prepareStatement("INSERT INTO `bieren`(`bierid`, `biernaam`, `variant`, `percentage`, `kleur`, `brouwerij`) VALUES (NULL,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -169,20 +185,18 @@ public class UserDAO extends BaseDAO{
                     ps.setString(4, b.getColor());
                     ps.setString(5, b.getBrewery());
                     ps.executeUpdate();
-                    // Add to table user-beers
+                    // Retrieve ID
                     ResultSet rsID = ps.getGeneratedKeys();
-                    int beerID = -1;
                     if (rsID.next()) {
                         beerID = rsID.getInt(1);
-                        // Add to beer object and hidden id column in jtable (for remove)
+                        // Add ID to beer object and thus to hidden id column in jtable (for remove)
                         b.setBeerID(beerID);
                     }
-                    PreparedStatement psLinkTable = conn.prepareStatement("INSERT INTO `gedronkenbieren`(`gebruikersid`, `bierid`) VALUES (?,?)");
-                    psLinkTable.setInt(1, userID);
-                    psLinkTable.setInt(2, beerID);
-                    psLinkTable.executeUpdate();
                 }
-
+                // Add to user-beer linking table (gedronkenbieren)
+                String sql = "INSERT INTO `gedronkenbieren`(`gebruikersid`, `bierid`) VALUES (" + userID + ", " + beerID + ")";
+                Statement psLinkTable = conn.createStatement();
+                psLinkTable.executeUpdate(sql);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -196,10 +210,10 @@ public class UserDAO extends BaseDAO{
         int checkIfDeleted = 0;
         try (Connection conn = getConn()) {
             // Delete user's beer in question
-            PreparedStatement psLink = conn.prepareStatement("DELETE FROM gedronkenbieren WHERE bierid = ? AND gebruikersid = ?");
-            psLink.setInt(1, beerID);
-            psLink.setInt(2, userID);
-            checkIfDeleted = psLink.executeUpdate();
+            // No SQL injection --> Statement
+            String sql = "DELETE FROM gedronkenbieren WHERE bierid = " + beerID + " AND gebruikersid = " + userID;
+            Statement psLink = conn.createStatement();
+            checkIfDeleted = psLink.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }

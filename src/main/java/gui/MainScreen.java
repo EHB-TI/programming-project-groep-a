@@ -38,7 +38,7 @@ public class MainScreen {
         Dimension findUserSize = new Dimension(findUser.getSize());
         addUser.setPreferredSize(findUserSize);
 
-        Doesn't work, even if fora say that you shout use preferred size with layout managers
+        Doesn't work, even if fora say that you should use preferred size with layout managers
         So a shady solution with spaces is used
          */
 
