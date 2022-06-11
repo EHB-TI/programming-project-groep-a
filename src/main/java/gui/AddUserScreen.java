@@ -61,6 +61,8 @@ public class AddUserScreen {
         // Residence
         JLabel residenceLabel = new JLabel("Residence");
         residenceField = new JTextField(30);
+        System.out.println(residenceField.getForeground().getRGB());
+        System.out.println(Color.BLACK.getRGB());
         // Email
         JLabel emailLabel = new JLabel("e-mail address");
         emailField = new JTextField(30);

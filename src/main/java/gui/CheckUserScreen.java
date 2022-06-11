@@ -62,7 +62,7 @@ public class CheckUserScreen {
             }
         };
         displayBeersTable = new JTable(beermodel);
-        //displayBeersTable.removeColumn(displayBeersTable.getColumn("beerid")); // Hide id column
+        displayBeersTable.removeColumn(displayBeersTable.getColumn("beerid")); // Hide id column
         displayBeersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Select only one at a time
         displayBeersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -72,10 +72,15 @@ public class CheckUserScreen {
         // Add beer title
         JLabel addBeerTitle = new JLabel("Add a beer to " + u.getName() + "'s collection");
         addBeerTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
-        // Fields to add beer
-        beerAdd = new JTextField(" Beer name ");
-        variantAdd = new JTextField(" Beer variant ");
 
+        // Fields to add beer
+        // Name
+        beerAdd = new JTextField(8);
+        new TextFieldPlaceholder("Beer name", beerAdd);
+        // Variant
+        variantAdd = new JTextField(8);
+        new TextFieldPlaceholder("Beer variant", variantAdd);
+        // Percentage
         try {
             MaskFormatter formatter = new MaskFormatter("##.#"); // A possible '0' in front (e.g. 09.0) is parsed away
             formatter.setPlaceholderCharacter('0');
@@ -85,9 +90,13 @@ public class CheckUserScreen {
             e.printStackTrace();
         }
         JLabel percentageLabel = new JLabel("%");
+        // Color
+        colorAdd = new JTextField(8);
+        new TextFieldPlaceholder("Beer color", colorAdd);
+        // Brewery
+        breweryAdd = new JTextField(8);
+        new TextFieldPlaceholder("Brewery", breweryAdd);
 
-        colorAdd = new JTextField(" Beer color ");
-        breweryAdd = new JTextField(" Brewery ");
         // Add beer button
         JButton addBeerButton = new JButton("Add beer!");
         // Remove beer title
