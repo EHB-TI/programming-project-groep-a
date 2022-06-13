@@ -1,47 +1,46 @@
 package gui;
 
 import dao.UserDAO;
+import entity.Beer;
 import entity.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static gui.MainScreen.beerGlass;
+
 // Also for deleting users
-public class FindUserScreen extends JFrame {
+public class FindUserScreen {
+
     private final JFrame jframe;
-    private final JLabel findTitle;
-    private final JLabel nameInputLabel;
     private final JTextField nameInputField;
-    private final JLabel surnameInputLabel;
     private final JTextField surnameInputField;
-    private final JLabel emailInputLabel;
     private final JTextField emailInputField;
-    private final JButton searchButton;
-    private final JScrollPane tablePane;
     private final JTable displayUserTable;
-    private final JButton deleteButton;
-    private final JButton beerButton;
 
     public FindUserScreen() {
         jframe = new JFrame("MyBrews");
+        jframe.setIconImage(beerGlass.getImage());
         jframe.setSize(710,600);
         // Form title
-        findTitle = new JLabel("Find someone in the MyBrews database");
+        JLabel findTitle = new JLabel("Find someone in the MyBrews database");
         findTitle.setFont(new Font("Tahoma", Font.BOLD, 18));
         // Search input label and field
-        nameInputLabel = new JLabel("Search by name");
+        JLabel nameInputLabel = new JLabel("Search by name");
         nameInputField = new JTextField(30);
-        surnameInputLabel = new JLabel("Search by surname");
+        JLabel surnameInputLabel = new JLabel("Search by surname");
         surnameInputField = new JTextField(30);
-        emailInputLabel = new JLabel("Search by e-mail");
+        JLabel emailInputLabel = new JLabel("Search by e-mail");
         emailInputField = new JTextField(30);
         // Search button
-        searchButton = new JButton("Search user!");
+        JButton searchButton = new JButton("Search user!");
         // Prepare table to show search results
-        String[] header = {"Name", "Surname", "DOB", "Gender", "Favorite beer", "Profession", "Residence", "e-mail", "Date joined"};
-        DefaultTableModel model = new DefaultTableModel(header, 0) {
+        String[] header = {"Name", "Surname", "DOB", "Gender", "Favorite beer", "Profession", "Residence", "e-mail", "Date joined", "id"};
+        DefaultTableModel usermodel = new DefaultTableModel(header, 0) {
+
             // Make jtable cells uneditable
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -49,16 +48,18 @@ public class FindUserScreen extends JFrame {
                 return false;
             }
         };
-        displayUserTable = new JTable(model);
+        displayUserTable = new JTable(usermodel);
+        displayUserTable.removeColumn(displayUserTable.getColumn("id")); // Hide id column
         displayUserTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+        displayUserTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Select only one at a time
         // Table will go in scroll pane, if you click search again, another row is added to the table
-        tablePane = new JScrollPane(displayUserTable);
+        JScrollPane tablePane = new JScrollPane(displayUserTable);
         tablePane.setPreferredSize(new Dimension(675, 300));
         tablePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         // Beer button
-        beerButton = new JButton("View or add to last user's beers");
+        JButton checkUserButton = new JButton("View selected user's beers");
         // Delete button
-        deleteButton = new JButton("Delete user in last row!");
+        JButton deleteButton = new JButton("Delete selected user");
 
 
         SpringLayout layout = new SpringLayout();
@@ -73,7 +74,7 @@ public class FindUserScreen extends JFrame {
         jframe.add(searchButton);
         jframe.add(tablePane);
         jframe.add(deleteButton);
-        jframe.add(beerButton);
+        jframe.add(checkUserButton);
 
         // Layout title
         layout.putConstraint(SpringLayout.WEST, findTitle, 10, SpringLayout.WEST, jframe);
@@ -100,20 +101,20 @@ public class FindUserScreen extends JFrame {
         layout.putConstraint(SpringLayout.WEST, tablePane, 10, SpringLayout.WEST, jframe);
         layout.putConstraint(SpringLayout.NORTH, tablePane, 50, SpringLayout.NORTH, emailInputLabel);
         // Layout beer button
-        layout.putConstraint(SpringLayout.EAST, beerButton, -10, SpringLayout.HORIZONTAL_CENTER, tablePane);
-        layout.putConstraint(SpringLayout.NORTH, beerButton, 20, SpringLayout.SOUTH, tablePane);
+        layout.putConstraint(SpringLayout.EAST, checkUserButton, -10, SpringLayout.HORIZONTAL_CENTER, tablePane);
+        layout.putConstraint(SpringLayout.NORTH, checkUserButton, 20, SpringLayout.SOUTH, tablePane);
         // Layout delete button
         layout.putConstraint(SpringLayout.WEST, deleteButton, 10, SpringLayout.HORIZONTAL_CENTER, tablePane);
         layout.putConstraint(SpringLayout.NORTH, deleteButton, 20, SpringLayout.SOUTH, tablePane);
 
         searchButton.addActionListener(e -> {
             UserDAO udao = new UserDAO();
-            ArrayList<User> usersFound = udao.findUser(nameInputField.getText(), surnameInputField.getText(), emailInputField.getText()); // usersFound.get(0) is null if no users found
+            ArrayList<User> usersFound = udao.findUser(nameInputField.getText(), surnameInputField.getText(), emailInputField.getText());
             // User found
             if (usersFound.size() != 0) {
                 for (User u : usersFound) {
-                    String[] tableData = {u.getName(), u.getSurname(), u.getDOB().toString(), u.getGender(), u.getFavoriteBeer(), u.getProfession(), u.getResidence(), u.getEmail(), u.getJoiningDate().toString()};
-                    model.addRow(tableData);
+                    String[] tableData = {u.getName(), u.getSurname(), u.getDOB().toString(), u.getGender(), u.getFavoriteBeer(), u.getProfession(), u.getResidence(), u.getEmail(), u.getJoiningDate().toString(), Integer.toString(u.getUserID())};
+                    usermodel.addRow(tableData);
                 }
             }
             // No user found
@@ -122,22 +123,65 @@ public class FindUserScreen extends JFrame {
             }
         });
 
-        beerButton.addActionListener(e -> {
-            UserDAO udao = new UserDAO();
-            udao.selectUser(displayUserTable, jframe);
+        checkUserButton.addActionListener(e -> {
+            int userRow = displayUserTable.getSelectedRow(); // Value -1 if none selected
+            if (userRow == -1) {
+                JOptionPane.showMessageDialog(jframe, "You must first search or select a user.", "No user selected", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                // Get User's info in user object for next screen
+                String name = (String)displayUserTable.getModel().getValueAt(userRow, 0); // Returns object, cast to String
+                String surname = (String)displayUserTable.getModel().getValueAt(userRow, 1);
+                LocalDate DOB = LocalDate.parse((String)displayUserTable.getModel().getValueAt(userRow, 2));
+                String gender = (String)displayUserTable.getModel().getValueAt(userRow, 3);
+                String favoBeer = (String)displayUserTable.getModel().getValueAt(userRow, 4);
+                String profession = (String)displayUserTable.getModel().getValueAt(userRow, 5);
+                String residence = (String)displayUserTable.getModel().getValueAt(userRow, 6);
+                String email = (String)displayUserTable.getModel().getValueAt(userRow, 7);
+                LocalDate dateJoined = LocalDate.parse((String)displayUserTable.getModel().getValueAt(userRow, 8));
+                String userIDString = (String)displayUserTable.getModel().getValueAt(userRow,9);
+                int userID = Integer.parseInt(userIDString); // Difficulties with direct casting from object to int
+                User u = new User(userID, name, surname, DOB, gender, favoBeer, profession, residence, email, dateJoined);
+
+                // New screen to display user's beers
+                CheckUserScreen cus = new CheckUserScreen(u);
+                UserDAO udao = new UserDAO();
+                ArrayList<Beer> beersFound = udao.selectUser(userID);
+                for (Beer b : beersFound) {
+                    String[] tableData = {b.getName(), b.getVariant(), Double.toString(b.getAlcoholPercentage()), b.getColor(), b.getBrewery(), Integer.toString(b.getBeerID())};
+                    cus.getBeermodel().addRow(tableData);
+                }
+                cus.getTableInfo3().setText(u.getName() + " has drank " + cus.getBeermodel().getRowCount() + " different beers");
+            }
         });
 
         deleteButton.addActionListener(e -> {
-            UserDAO udao = new UserDAO();
-            udao.deleteUser(displayUserTable, jframe);
+            int userRow = displayUserTable.getSelectedRow(); // Value -1 if none selected
+            if (userRow == -1) {
+                JOptionPane.showMessageDialog(jframe, "You must first search or select a user.", "No user selected", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                String userIDString = (String)displayUserTable.getModel().getValueAt(userRow, 9);
+                int userID = Integer.parseInt(userIDString); // Difficulties with direct casting from object to int
+                UserDAO udao = new UserDAO();
+                int[] checkIfDeleted = udao.deleteUser(userID);
+                // Check if any user was deleted and delete from table
+                if (checkIfDeleted[1] != 0)  {
+                    usermodel.removeRow(userRow);
+                    JOptionPane.showMessageDialog(jframe, "The user and the user's " + checkIfDeleted[0] + " beers have been deleted!", "User deleted", JOptionPane.PLAIN_MESSAGE);
+                }
+                // Delete error
+                else {
+                    JOptionPane.showMessageDialog(jframe, "The user has already been deleted or doesn't exist. Try selecting another user first.", "User delete failed", JOptionPane.WARNING_MESSAGE);
+                }
+            }
         });
-
 
 
 
         jframe.setLocationRelativeTo(null); // Center of screen
         jframe.setVisible(true);
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
 
@@ -145,6 +189,6 @@ public class FindUserScreen extends JFrame {
 
 
     public static void main(String[] args) {
-        FindUserScreen s = new FindUserScreen();
+        new FindUserScreen();
     }
 }

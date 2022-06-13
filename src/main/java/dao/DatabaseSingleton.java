@@ -1,6 +1,6 @@
 package dao;
 
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
@@ -25,9 +25,9 @@ public class DatabaseSingleton {
     // Work with property file for security
     public static Properties loadPropertiesFile() throws Exception {
         Properties props = new Properties();
-        FileInputStream fis = new FileInputStream("src/main/resources/JDBCSettings.properties");
-        props.load(fis);
-        fis.close();
+        FileReader fr = new FileReader("src/main/resources/JDBCSettings.properties");
+        props.load(fr);
+        fr.close();
         return props;
     }
 
