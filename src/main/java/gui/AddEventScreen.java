@@ -1,12 +1,15 @@
 package gui;
 
 import dao.EventDAO;
+import entity.*;
 import entity.Event;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.TreeSet;
 
 public class AddEventScreen extends JFrame{
 
