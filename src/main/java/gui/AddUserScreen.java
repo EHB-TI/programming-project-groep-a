@@ -164,6 +164,13 @@ public class AddUserScreen {
             final String profession = professionField.getText().trim();
             final String residence = residenceField.getText().trim();
             final String email = emailField.getText().trim();
+            // Check e-mail for @ and . in e-mail
+            // Could be done more thoroughly by e.g. regex, but this will suffice for our purposes
+            if (!email.contains("@") || !email.contains(".")) {
+                JOptionPane.showMessageDialog(jframe, "Please fill out a correct e-mail!", "Incorrect e-mail", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             if (!name.isBlank() && !surname.isBlank() && DOB != null && gender != null && !beer.isBlank() && !profession.isBlank() && !residence.isBlank() && !email.isBlank()) {
                 // Put fields in user to pass to saveUser function
                 User u = new User(name, surname, DOB, gender, beer, profession, residence, email);
