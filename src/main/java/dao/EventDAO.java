@@ -4,6 +4,7 @@ import entity.Event;
 import entity.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class EventDAO extends BaseDAO {
 
@@ -48,22 +49,24 @@ public class EventDAO extends BaseDAO {
     }
 
     //findEvent by title
-    public void findEventByTitle(String searchTerm)
-    {
+    public ArrayList<String> findEventByTitle(String searchTerm) {
+        ArrayList<String> eventsFound = new ArrayList<>();
         //wildcard % doesn't work?
-        try(Connection conn = getConn()){
+        try (Connection conn = getConn()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM evenementen WHERE titel LIKE ?");
             stmt.setString(1, searchTerm);
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 System.out.println(rs.getString("titel"));
+                eventsFound.add(rs.getString("titel"));
             }
-            if (!rs.next()){
+            if (!rs.next()) {
                 System.out.println("Done.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return eventsFound;
     }
 
     //findEvent by date, om te oefenen

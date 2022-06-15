@@ -100,7 +100,7 @@ public class Event {
         this.visitors.add(u);
     }
 
-    //TO DO - STUCK? only deletes one? - delete visitor from event
+    //delete visitor from event
     public void deleteVisitor(User u) throws NoVisitorsException {
         //check if list is empty
         if (this.visitors == null)
@@ -118,6 +118,7 @@ public class Event {
                 }
             }
         }
+
 
     }
 
