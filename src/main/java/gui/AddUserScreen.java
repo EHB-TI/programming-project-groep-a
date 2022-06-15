@@ -35,14 +35,17 @@ public class AddUserScreen {
         // Name
         JLabel nameLabel = new JLabel("Name");
         nameField = new JTextField(30);
+        new TextFieldPlaceholder("Xavier", nameField);
         // Surname
         JLabel surnameLabel = new JLabel("Surname");
         surnameField = new JTextField(30);
+        new TextFieldPlaceholder("Waterslaeghers", surnameField);
         // DOB
         JLabel DOBLabel = new JLabel("DOB (YYYY-MM-DD)");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         DOBField = new JFormattedTextField(format);
         DOBField.setColumns(11);
+        new TextFieldPlaceholder("1945-08-26", DOBField);
         // Gender
         JLabel genderLabel = new JLabel("Gender");
         optionM = new JRadioButton("M");
@@ -55,17 +58,19 @@ public class AddUserScreen {
         // Favorite beer
         JLabel beerLabel = new JLabel("Favorite beer");
         beerField = new JTextField(30);
+        new TextFieldPlaceholder("Jupiler", beerField);
         // Profession
         JLabel professionLabel = new JLabel("Profession");
         professionField = new JTextField(30);
+        new TextFieldPlaceholder("Militair", professionField);
         // Residence
         JLabel residenceLabel = new JLabel("Residence");
         residenceField = new JTextField(30);
-        System.out.println(residenceField.getForeground().getRGB());
-        System.out.println(Color.BLACK.getRGB());
+        new TextFieldPlaceholder("Emblem", residenceField);
         // Email
         JLabel emailLabel = new JLabel("e-mail address");
         emailField = new JTextField(30);
+        new TextFieldPlaceholder("xavierwaterslaeghers@hotmail.com", emailField);
         // Save user button
         JButton saveButton = new JButton("Add user to database!");
 
